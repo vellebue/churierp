@@ -1,0 +1,30 @@
+<!DOCTYPE html5>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <link href="/css/login.css" rel="stylesheet" type="text/css"></link>
+    <head>
+        <title th:text="#{churierpweb.loginview.title}"></title>
+    </head>
+    <body>
+        <div class="mainDiv">
+            <div class="topDiv"></div>
+            <form class="form" action="./perform_login" method="POST">
+                <div class="topDivForm"></div>
+                <div class="formLine">
+                    <label class="label" th:text="#{churierpweb.loginview.username.label}"></label>
+                    <input class="input" type="text" name="username"></input>
+                </div>
+                <div class="formLine">
+                    <label class="label" th:text="#{churierpweb.loginview.password.label}"></label>
+                    <input class="input" type="password" name="password"></input>
+                </div>
+                <div class="button">
+                    <input type="submit" th:value="#{churierpweb.loginview.button}"></input>
+                </div>
+                <div class="errorDiv" th:if="${error == 'true'}">
+                    <span th:text="#{churierpweb.loginview.error}"></span>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

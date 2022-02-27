@@ -1,0 +1,72 @@
+.mainDiv {
+    width: 100%;
+    height: 100%
+    display: block;
+    text-align: center;
+    vertical-align: middle;
+    font-family: Arial, sans-serif;
+    font-size: 14pt;
+}
+
+.topDiv {
+    height: 35%;
+    width: 100%
+}
+
+.form {
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    width: 400px;
+    height: 248px;
+    background-color: #E0E0E0;
+}
+
+.topDivForm {
+    width: 100%;
+    height: 83px;
+}
+
+.formLine {
+    width: 100%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.label {
+    min-width: 180px;
+    text-align: right;
+    display: inline-block;
+}
+
+.input {
+    background-color: #FFFFFF;
+    width: 50%;
+    text-align: left;
+    font-family: Arial, sans-serif;
+    font-size: 14pt;
+}
+
+.button {
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: Arial, sans-serif;
+    font-size: 14pt;
+}
+
+.errorDiv {
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: Arial, sans-serif;
+    font-size: 14pt;
+    font-weight: bold;
+    color: #FF0000;
+}

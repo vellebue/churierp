@@ -1,0 +1,34 @@
+list:
+  - menuText: "churierpweb.menu.Sales"
+    url: ""
+    children:
+      - menuText: "churierpweb.menu.sales.Orders"
+        url: ""
+        children:
+          - menuText: "churierpweb.menu.sales.orders.Create"
+            url: "/sales/orders/create"
+          - menuText: "churierpweb.menu.sales.orders.List"
+            url: "/sales/orders/list"
+      - menuText: "churierpweb.menu.sales.Bills"
+        url: ""
+        children:
+          - menuText: "churierpweb.menu.sales.bills.ServiceBills"
+            url: ""
+            children:
+              - menuText: "churierpweb.menu.sales.bills.serviceBills.Create"
+                url: "/sales/bills/serviceBills/create"
+              - menuText: "churierpweb.menu.sales.bills.serviceBills.List"
+                url: "/sales/bills/serviceBills/list"
+  - menuText: "churierpweb.menu.Administration"
+    url: ""
+    children:
+      - menuText: "churierpweb.menu.administration.Users"
+        url: ""
+        children:
+          - menuText : "churierpweb.menu.administration.users.Create"
+            url: ""
+          - menuText : "churierpweb.menu.administration.users.List"
+            url: ""
+            className: "org.bastanchu.churierp.churierpweb.view.administration.users.ThematicUsersView"
+      - menuText: "churierpweb.menu.administration.Companies"
+        url: ""
