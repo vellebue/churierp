@@ -20,6 +20,13 @@
         <spring.version>5.3.8</spring.version>
         <skip.integration.tests>true</skip.integration.tests>
         <skip.unit.tests>false</skip.unit.tests>
+
+        <postgres.docker.name>postgres:latest</postgres.docker.name>
+        <postgres.docker.env.POSTGRES_USER>postgres</postgres.docker.env.POSTGRES_USER>
+        <postgres.docker.env.POSTGRES_PASSWORD>postgres</postgres.docker.env.POSTGRES_PASSWORD>
+        <!--postgres.docker.env.POSTGRES_HOST_AUTH_METHOD>trust</postgres.docker.env.POSTGRES_HOST_AUTH_METHOD-->
+        <postgres.docker.wait.time>11000</postgres.docker.wait.time>
+        <postgres.docker.ports.1>18800:5432</postgres.docker.ports.1>
     </properties>
 
     <dependencies>
@@ -33,6 +40,11 @@
             <artifactId>kotlin-reflect</artifactId>
             <version>${kotlin.version}</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>1.2.71</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -99,6 +111,12 @@
             <artifactId>spring-security-crypto</artifactId>
             <version>5.3.8.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>5.3.8</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -108,7 +126,7 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
-                <version>${kotlin.version}</version>
+                <version>1.2.30</version>
                 <executions>
                     <execution>
                         <id>compile</id>
@@ -135,7 +153,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
+            <!--plugin>
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <version>1.2.30</version>
@@ -152,8 +170,7 @@
                         <version>1.2.30</version>
                     </dependency>
                 </dependencies>
-                <!--...-->
-            </plugin>
+            </plugin-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -218,6 +235,96 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.39.1</version>
+                <configuration>
+                    <skip>${skip.integration.tests}</skip>
+                    <images>
+                        <image>
+                            <alias>postgresql</alias>
+                            <name>fabric8/compose-demo:latest</name>
+                            <external>
+                                <type>compose</type>
+                                <basedir>src/integration-test/resources</basedir>
+                                <composeFile>docker-compose.yml</composeFile>
+                            </external>
+                        </image>
+                    </images>
+                </configuration>
+                <!-- Connect start/stop to pre- and
+                     post-integration-test phase, respectively if you want to start
+                     your docker containers during integration tests -->
+                <executions>
+                    <execution>
+                        <id>start</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <!-- "build" should be used to create the images with the
+                                 artifact -->
+                            <goal>build</goal>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- docker configuration -->
+            <!--plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.39.1</version>
+                <configuration>
+                    <skip>${skip.integration.tests}</skip>
+                    <images>
+                        <image>
+                            <alias>database</alias>
+                            <external>
+                                <type>properties</type>
+                                <prefix>postgres.docker</prefix>
+                            </external>
+                            <run>
+                                <namingStrategy>alias</namingStrategy>
+                                <wait>
+                                    <log>database system is ready to accept connections</log>
+                                    <time>20000</time>
+                                </wait>
+                            </run>
+                        </image>
+                    </images>
+                </configuration-->
+                <!-- Connect start/stop to pre- and
+                     post-integration-test phase, respectively if you want to start
+                     your docker containers during integration tests -->
+                <!--executions>
+                    <execution>
+                        <id>start</id>
+                        <phase>pre-integration-test</phase>
+                        <goals-->
+                            <!-- "build" should be used to create the images with the
+                                 artifact -->
+                            <!--goal>build</goal>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin-->
+
         </plugins>
     </build>
 
