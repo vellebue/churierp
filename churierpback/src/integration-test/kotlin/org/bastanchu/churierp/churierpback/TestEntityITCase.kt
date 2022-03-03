@@ -1,7 +1,6 @@
 package org.bastanchu.churierp.churierpback
 
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -34,6 +33,14 @@ class TestEntityITCase {
             statement.use {
                 val resultSet = it?.executeQuery()
                 assertNotNull(resultSet,"Result set must not be null")
+                if (resultSet != null) {
+                    while (resultSet.next()) {
+                        val id = resultSet.getInt("ID") as Integer;
+                        assertEquals(1 as Integer, id)
+                        val text = resultSet.getString("TEXT")
+                        assertEquals("This is an entity", text)
+                    }
+                }
             }
         }
     }
