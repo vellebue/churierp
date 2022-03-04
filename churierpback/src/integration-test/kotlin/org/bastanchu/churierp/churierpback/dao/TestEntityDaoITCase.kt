@@ -231,6 +231,24 @@ class TestEntityDaoITCase {
         }
     }
 
+    @Test
+    fun shouldPerformDtoToEntityDoubleArgumentCorrectly() {
+        assertNotNull(testEntityDao, "TestEntityDao must be created and injected")
+        if (testEntityDao != null) {
+            val testEntityDto = TestEntityDto()
+            testEntityDto.id = 2 as Integer
+            testEntityDto.text = "This is a new text entity"
+            testEntityDto.eventDate = dateFormat.parse("2022/03/23")
+            val testEntity = TestEntity()
+            testEntityDao.fromDtoToEntity(testEntityDto, testEntity)
+            assertEquals(2, testEntity.id, "Created entity id must be 2")
+            assertEquals("This is a new text entity", testEntity.text,
+                "Created entity text must be 'This is a new text entity'")
+            assertEquals("2022/03/23", dateFormat.format(testEntity.eventDate),
+                "Created entity event date must be '2022/03/23'")
+        }
+    }
+
     // DATA MANIPULATION TESTS
 
     @Test
@@ -238,28 +256,28 @@ class TestEntityDaoITCase {
         assertNotNull(testEntityDao, "TestEntityDao must be created and injected")
         if (testEntityDao != null) {
             val entity = TestEntity()
-            entity.text = "This is the third entity";
+            entity.text = "This is the third entity"
             entity.eventDate = dateFormat.parse("2022/03/08")
             testEntityDao.create(entity)
             assertEquals(3, entity.id, "Entity id must be asigned at creation to value 3")
             // Retrieve entity form DB
             val connection = dataSource?.connection
-            connection.use {
+            connection.use { connection ->
                 val query = "select ID, TEXT, EVENT_DATE from TEST_ENTITIES t where t.ID = 3"
-                val statement = it?.prepareStatement(query)
-                statement.use {
-                    val resultSet = it?.executeQuery()
-                    resultSet.use {
-                        if (it != null) {
-                            if (it.next()) {
-                                val id = it.getInt("ID")
+                val statement = connection?.prepareStatement(query)
+                statement.use { statement ->
+                    val resultSet = statement?.executeQuery()
+                    resultSet.use { resultSet ->
+                        if (resultSet != null) {
+                            if (resultSet.next()) {
+                                val id = resultSet.getInt("ID")
                                 assertEquals(3, id, "Retrieved id must be 3")
-                                val text = it.getString("TEXT")
+                                val text = resultSet.getString("TEXT")
                                 assertEquals(
                                     "This is the third entity", text,
                                     "Retrieved text must be 'This is the third entity'"
                                 )
-                                val eventDate = it.getTimestamp("EVENT_DATE")
+                                val eventDate = resultSet.getTimestamp("EVENT_DATE")
                                 assertEquals(
                                     "2022/03/08", dateFormat.format(eventDate),
                                     "Retrieved event date must be '2022/03/08'"
