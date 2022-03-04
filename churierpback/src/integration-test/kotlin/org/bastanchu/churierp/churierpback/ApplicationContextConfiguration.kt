@@ -27,7 +27,7 @@ open class ApplicationContextConfiguration {
     @Autowired
     private val env: Environment? = null
 
-    @Bean
+    @Bean(name = ["dataSource"])
     open fun dataSource(): DataSource {
         val dataSource = DriverManagerDataSource()
         dataSource.setDriverClassName(env?.getProperty("jdbc.churierpweb.driver"))

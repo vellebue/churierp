@@ -4,6 +4,8 @@ import org.bastanchu.churierp.churierpback.dao.BaseDao
 import org.bastanchu.churierp.churierpback.util.annotation.FormField
 import org.hibernate.Session
 import org.slf4j.LoggerFactory
+import org.springframework.transaction.annotation.Propagation
+import org.springframework.transaction.annotation.Transactional
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 import javax.persistence.EntityManager
@@ -38,7 +40,10 @@ open class BaseDaoImpl<K,E> (open val entityManager: EntityManager)  : BaseDao<K
         val builder = session.criteriaBuilder;
         var criteriaQuery = builder.createQuery(entityClassTypeClass) as CriteriaQuery<E>;
         var root = criteriaQuery.from(entityClassTypeClass) as Root<E>
-        val filterDeclaredFields = entityClassTypeClass?.declaredFields;
+        val filterDeclaredFields = entityClassTypeClass?.declaredFields?.filter {
+            // To exclude "strange" fields added by frameworks like fields starting with '$'
+            !it.name.startsWith("$")
+        }
         criteriaQuery = criteriaQuery.select(root);
         if (filterDeclaredFields != null) {
             for (field in filterDeclaredFields) {
@@ -172,7 +177,13 @@ open class BaseDaoImpl<K,E> (open val entityManager: EntityManager)  : BaseDao<K
         }
     }
 
+    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     override fun create(entity: E) {
-        entityManager.persist(entity);
+        entityManager.persist(entity)
+    }
+
+    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
+    override fun flush() {
+        entityManager.flush()
     }
 }

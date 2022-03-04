@@ -241,6 +241,7 @@
                 </executions>
             </plugin>
 
+            <!-- Docker plugin to activate postgresql -->
             <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
@@ -282,53 +283,43 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- docker configuration -->
-            <!--plugin>
-                <groupId>io.fabric8</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>0.39.1</version>
-                <configuration>
-                    <skip>${skip.integration.tests}</skip>
-                    <images>
-                        <image>
-                            <alias>database</alias>
-                            <external>
-                                <type>properties</type>
-                                <prefix>postgres.docker</prefix>
-                            </external>
-                            <run>
-                                <namingStrategy>alias</namingStrategy>
-                                <wait>
-                                    <log>database system is ready to accept connections</log>
-                                    <time>20000</time>
-                                </wait>
-                            </run>
-                        </image>
-                    </images>
-                </configuration-->
-                <!-- Connect start/stop to pre- and
-                     post-integration-test phase, respectively if you want to start
-                     your docker containers during integration tests -->
-                <!--executions>
+
+            <!-- JACOCO Configuration -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.7.1</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.7</version>
+                <executions>
                     <execution>
-                        <id>start</id>
-                        <phase>pre-integration-test</phase>
-                        <goals-->
-                            <!-- "build" should be used to create the images with the
-                                 artifact -->
-                            <!--goal>build</goal>
-                            <goal>start</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>stop</id>
-                        <phase>post-integration-test</phase>
                         <goals>
-                            <goal>stop</goal>
+                            <goal>prepare-agent</goal>
+                            <goal>report</goal>
                         </goals>
                     </execution>
                 </executions>
-            </plugin-->
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptor>src/assembly/bin.xml</descriptor>
+                    <finalName>jacoco</finalName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>assembly</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
         </plugins>
     </build>

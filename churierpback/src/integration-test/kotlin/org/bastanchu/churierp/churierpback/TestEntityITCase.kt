@@ -21,27 +21,4 @@ class TestEntityITCase {
     fun shouldPerformAnEntityTestProperly() {
         assertTrue(true)
     }
-
-    @Test
-    fun shouldPerformAQueryAgainstTestingDatabaseProperly() {
-        assertNotNull(dataSource, "DataSource must not be null")
-        val connection = dataSource?.connection
-        assertNotNull(connection, "Connection must not be null")
-        connection.use { it ->
-            val query = "select * from TEST_ENTITIES"
-            val statement = it?.prepareStatement(query)
-            statement.use {
-                val resultSet = it?.executeQuery()
-                assertNotNull(resultSet,"Result set must not be null")
-                if (resultSet != null) {
-                    while (resultSet.next()) {
-                        val id = resultSet.getInt("ID") as Integer;
-                        assertEquals(1 as Integer, id)
-                        val text = resultSet.getString("TEXT")
-                        assertEquals("This is an entity", text)
-                    }
-                }
-            }
-        }
-    }
 }
