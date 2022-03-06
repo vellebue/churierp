@@ -4,7 +4,7 @@ import com.vaadin.flow.component.html.Div;
 import org.bastanchu.churierp.churierpback.dto.administration.users.UserDto;
 import org.bastanchu.churierp.churierpback.dto.administration.users.UserFilterDto;
 import org.bastanchu.churierp.churierpback.service.UserService;
-import org.bastanchu.churierp.churierpweb.component.PagedTableComponent;
+import org.bastanchu.churierp.churierpweb.component.list.PagedTableComponent;
 import org.bastanchu.churierp.churierpweb.component.button.ButtonBar;
 import org.bastanchu.churierp.churierpweb.component.button.GreenButton;
 import org.bastanchu.churierp.churierpweb.component.view.ThematicBodyListView;

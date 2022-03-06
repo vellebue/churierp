@@ -25,6 +25,9 @@ class User {
     @Column(name = "SURNAME", nullable = false)
     var surname: String? = null;
 
+    @Column(name = "EMAIL", nullable = true)
+    var email: String? = null;
+
     @Column(name = "CREATION_DATE", nullable = false)
     var creationDate: Date? = null;
 
