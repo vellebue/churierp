@@ -89,6 +89,7 @@ class PagedTableComponentMainDialog extends Dialog {
         allFieldsList.addAll(selectedItems);
         allFieldsList.addAll(availableItems);
         List<Field> matchedFields = new ArrayList<>();
+        /*
         for (Field field :allFieldsList) {
             org.bastanchu.churierp.churierpback.util.annotation.Field fieldAnnotation =
                     field.getAnnotation(org.bastanchu.churierp.churierpback.util.annotation.Field.class);
@@ -97,6 +98,19 @@ class PagedTableComponentMainDialog extends Dialog {
                     LocaleContextHolder.getLocale());
             if (stringItems.contains(fieldAnnotationText)) {
                 matchedFields.add(field);
+            }
+        }
+         */
+        for (String item : stringItems) {
+            for (Field field :allFieldsList) {
+                org.bastanchu.churierp.churierpback.util.annotation.Field fieldAnnotation =
+                        field.getAnnotation(org.bastanchu.churierp.churierpback.util.annotation.Field.class);
+                String fieldAnnotationKey = fieldAnnotation.key();
+                String fieldAnnotationText = messageSource.getMessage(fieldAnnotationKey, null,
+                        LocaleContextHolder.getLocale());
+                if (item.equals(fieldAnnotationText)) {
+                    matchedFields.add(field);
+                }
             }
         }
         return matchedFields;
