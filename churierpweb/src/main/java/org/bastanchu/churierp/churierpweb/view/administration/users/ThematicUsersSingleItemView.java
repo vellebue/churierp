@@ -2,8 +2,10 @@ package org.bastanchu.churierp.churierpweb.view.administration.users;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import org.bastanchu.churierp.churierpback.dto.administration.users.UserDto;
 import org.bastanchu.churierp.churierpback.service.UserService;
+import org.bastanchu.churierp.churierpweb.component.button.RedButton;
 import org.bastanchu.churierp.churierpweb.component.form.CustomForm;
 import org.bastanchu.churierp.churierpweb.component.button.BlueButton;
 import org.bastanchu.churierp.churierpweb.component.button.ButtonBar;
@@ -33,6 +35,7 @@ public class ThematicUsersSingleItemView extends ThematicBodySingleItemView<User
     private ButtonBar getUpdateButtonBar() {
         ButtonBar buttonBar = new ButtonBar();
         ThematicUsersSingleItemView thisView = this;
+        // Back button
         buttonBar.addButton(new Button(getMessageSource().getMessage("churierpweb.administration.users.back.button",
                 null,
                 LocaleContextHolder.getLocale()), e-> {
@@ -42,6 +45,7 @@ public class ThematicUsersSingleItemView extends ThematicBodySingleItemView<User
             event.setItem(getItemModel());
             fireBackAction(event);
         }));
+        // Update button
         buttonBar.addButton(new BlueButton(getMessageSource().getMessage("churierpweb.administration.users.update.button",
                 null,
                 LocaleContextHolder.getLocale()), e-> {
@@ -55,6 +59,39 @@ public class ThematicUsersSingleItemView extends ThematicBodySingleItemView<User
                 event.setItem(getItemModel());
                 userService.updateUser(itemInForm);
                 fireUpdateAction(event);
+            }
+        }));
+        // Delete button
+        buttonBar.addButton(new RedButton(getMessageSource().getMessage("churierpweb.administration.users.delete.button",
+                null,
+                LocaleContextHolder.getLocale()), e -> {
+            UserDto itemInForm = new UserDto();
+            boolean valid = form.writeBean(itemInForm);
+            if (valid) {
+                ConfirmDialog dialog = new ConfirmDialog();
+                dialog.setHeader(getMessageSource().getMessage("churierpweb.administration.users.confirm.title",
+                        null,
+                        LocaleContextHolder.getLocale()));
+                dialog.setText(getMessageSource().getMessage("churierpweb.administration.users.confirm.dialog",
+                        null,
+                        LocaleContextHolder.getLocale()));
+                dialog.setConfirmText(getMessageSource().getMessage("churierpweb.administration.users.confirm.ok",
+                        null,
+                        LocaleContextHolder.getLocale()));
+                dialog.setCancelText(getMessageSource().getMessage("churierpweb.administration.users.confirm.cancel",
+                        null,
+                        LocaleContextHolder.getLocale()));
+                dialog.addConfirmListener(ce -> {
+                    thisView.setItemModel(itemInForm);
+                    ThematicBodySingleItemViewListener.SingleItemEvent<UserDto> event =
+                            new ThematicBodySingleItemViewListener.SingleItemEvent<>();
+                    event.setSourceView(this);
+                    event.setItem(getItemModel());
+                    userService.deleteUser(itemInForm);
+                    fireDeleteAction(event);
+                });
+                dialog.setCancelable(true);
+                dialog.open();
             }
         }));
         return buttonBar;

@@ -63,6 +63,18 @@ class UserServiceImpl (@Autowired val userDao: UserDao) : UserService {
         }
     }
 
+    override fun deleteUser(userDto: UserDto) {
+        if ((userDto != null)) {
+            if (userDto.userId != null) {
+                userDao.deleteById(userDto.userId as Int);
+            } else {
+                throw RuntimeException("userDto id is null");
+            }
+        } else {
+            throw RuntimeException("userDto null");
+        }
+    }
+
     override fun listUsers(): List<UserDto> {
         val users = userDao.listAll();
         return users.map { u -> userDao.toDataTransferObject(u); };

@@ -186,4 +186,18 @@ open class BaseDaoImpl<K,E> (open val entityManager: EntityManager)  : BaseDao<K
     override fun flush() {
         entityManager.flush()
     }
+
+    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
+    override fun deleteById(id: K) {
+        val entity = entityManager.find(entityClassTypeClass, id);
+        entityManager.remove(entity);
+    }
+
+    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
+    override fun delete(entity: E) {
+        val id = getKeyValue(entity)
+        if (id != null) {
+            deleteById(id);
+        }
+    }
 }

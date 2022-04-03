@@ -44,6 +44,12 @@ public abstract class ThematicBodySingleItemView<T> extends ThematicBodyElementV
         }
     }
 
+    protected void fireDeleteAction(ThematicBodySingleItemViewListener.SingleItemEvent<T> event) {
+        if (listener != null) {
+            listener.onDeleteAction(event);
+        }
+    }
+
     protected abstract void onModelChanged(T itemModel);
 
 

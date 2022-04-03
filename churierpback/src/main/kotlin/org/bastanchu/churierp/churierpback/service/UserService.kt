@@ -15,5 +15,7 @@ interface UserService {
 
     fun updateUser(userDto: UserDto);
 
+    fun deleteUser(userDto: UserDto);
+
     fun listUsers():List<UserDto>
 }

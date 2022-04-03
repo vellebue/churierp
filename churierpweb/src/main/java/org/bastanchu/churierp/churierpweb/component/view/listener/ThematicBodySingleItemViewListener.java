@@ -19,4 +19,6 @@ public interface ThematicBodySingleItemViewListener<T> {
     public void onUpdateAction(SingleItemEvent<T> event);
 
     public void onCreateAction(SingleItemEvent<T> event);
+
+    public void onDeleteAction(SingleItemEvent<T> event);
 }

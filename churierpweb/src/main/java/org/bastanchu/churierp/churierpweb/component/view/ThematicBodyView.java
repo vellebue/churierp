@@ -145,4 +145,13 @@ public abstract class ThematicBodyView<T, F> extends BodyView
         listView.fireStateChanged();
     }
 
+    @Override
+    public void onDeleteAction(SingleItemEvent<T> event) {
+        logger.info("Item deleted");
+        singleItemView.fireEnd();
+        mainContainer.removeAll();
+        mainContainer.add(listView);
+        listView.fireInit();
+        listView.fireStateChanged();
+    }
 }

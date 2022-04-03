@@ -12,6 +12,10 @@ interface  BaseDao <K,E> {
 
     fun create(entity:E)
 
+    fun deleteById(id:K)
+
+    fun delete(entity:E)
+
     fun flush()
 
 }
