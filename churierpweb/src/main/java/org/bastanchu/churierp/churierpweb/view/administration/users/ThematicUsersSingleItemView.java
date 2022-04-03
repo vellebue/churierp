@@ -4,6 +4,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import org.bastanchu.churierp.churierpback.dto.administration.users.UserDto;
+import org.bastanchu.churierp.churierpback.dto.administration.users.UserFilterDto;
 import org.bastanchu.churierp.churierpback.service.UserService;
 import org.bastanchu.churierp.churierpweb.component.button.RedButton;
 import org.bastanchu.churierp.churierpweb.component.form.CustomForm;
@@ -15,6 +16,8 @@ import org.bastanchu.churierp.churierpweb.component.view.listener.ThematicBodySi
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.i18n.LocaleContextHolder;
+
+import java.util.List;
 
 public class ThematicUsersSingleItemView extends ThematicBodySingleItemView<UserDto> {
 
@@ -52,13 +55,18 @@ public class ThematicUsersSingleItemView extends ThematicBodySingleItemView<User
             UserDto itemInForm = new UserDto();
             boolean valid = form.writeBean(itemInForm);
             if (valid) {
-                thisView.setItemModel(itemInForm);
-                ThematicBodySingleItemViewListener.SingleItemEvent<UserDto> event =
-                        new ThematicBodySingleItemViewListener.SingleItemEvent<>();
-                event.setSourceView(this);
-                event.setItem(getItemModel());
-                userService.updateUser(itemInForm);
-                fireUpdateAction(event);
+                if (validLogin(itemInForm)) {
+                    thisView.setItemModel(itemInForm);
+                    ThematicBodySingleItemViewListener.SingleItemEvent<UserDto> event =
+                            new ThematicBodySingleItemViewListener.SingleItemEvent<>();
+                    event.setSourceView(this);
+                    event.setItem(getItemModel());
+                    userService.updateUser(itemInForm);
+                    fireUpdateAction(event);
+                } else {
+                    form.addErrorMessageKey("churierpweb.administration.users.dto.validation.loginExists",
+                            new Object[]{itemInForm.getLogin()});
+                }
             }
         }));
         // Delete button
@@ -115,16 +123,40 @@ public class ThematicUsersSingleItemView extends ThematicBodySingleItemView<User
             UserDto itemInForm = new UserDto();
             boolean valid = form.writeBean(itemInForm);
             if (valid) {
-                thisView.setItemModel(itemInForm);
-                ThematicBodySingleItemViewListener.SingleItemEvent<UserDto> event =
+                if (validLogin(itemInForm)) {
+                    thisView.setItemModel(itemInForm);
+                    ThematicBodySingleItemViewListener.SingleItemEvent<UserDto> event =
                         new ThematicBodySingleItemViewListener.SingleItemEvent<>();
-                event.setSourceView(this);
-                event.setItem(getItemModel());
-                userService.createUser(itemInForm);
-                fireUpdateAction(event);
+                    event.setSourceView(this);
+                    event.setItem(getItemModel());
+                    userService.createUser(itemInForm);
+                    fireCreateAction(event);
+                } else {
+                    form.addErrorMessageKey("churierpweb.administration.users.dto.validation.loginExists",
+                            new Object[]{itemInForm.getLogin()});
+                }
             }
         }));
         return buttonBar;
+    }
+
+    /**
+     * Validates if there is another user id with the same login.
+     * @param userDto userDto object to test.
+     * @return <code>true</code> if there are no other user ids with the same login <code>false</code> otherwise.
+     *
+     */
+    private boolean validLogin(UserDto userDto) {
+        UserFilterDto userFilterDto = new UserFilterDto();
+        userFilterDto.setLogin(userDto.getLogin());
+        List<UserDto> users = userService.filterUsers(userFilterDto);
+        if ((users == null) || (users.size() == 0) ||
+            ((users.size() == 1) && (users.get(0).getLogin().equals(userDto.getLogin())
+              && (users.get(0).getUserId().equals(userDto.getUserId()))))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

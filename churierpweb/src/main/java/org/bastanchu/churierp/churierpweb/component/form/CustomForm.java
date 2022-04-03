@@ -163,8 +163,8 @@ public class CustomForm<T> extends FormLayout {
         }
     }
 
-    public void addErrorMessageKey(String errorMessageKey) {
-        String errorMessage = messageSource.getMessage(errorMessageKey, null, LocaleContextHolder.getLocale());
+    public void addErrorMessageKey(String errorMessageKey, Object[] parameters) {
+        String errorMessage = messageSource.getMessage(errorMessageKey, parameters, LocaleContextHolder.getLocale());
         Label label = new Label(errorMessage);
         label.getStyle().set("color", "red");
         label.getStyle().set("font-size", "10pt");
@@ -187,7 +187,7 @@ public class CustomForm<T> extends FormLayout {
                 List<String> errors = validable.validate();
                 if ((errors != null) && (errors.size() > 0)) {
                     errors.stream().forEach(it -> {
-                        addErrorMessageKey(it);
+                        addErrorMessageKey(it, null);
                     });
                     return false;
                 } else {

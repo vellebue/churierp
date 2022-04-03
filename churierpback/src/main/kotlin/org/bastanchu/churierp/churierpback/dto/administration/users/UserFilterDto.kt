@@ -13,25 +13,25 @@ class UserFilterDto : Validator {
 
     @Field(key = "churierpweb.administration.users.dto.filterField.login")
     @FormField(groupId = 0, indexInGroup = 0)
-    private var login:String? = null;
+    public var login:String? = null;
     @Field(key = "churierpweb.administration.users.dto.filterField.name")
     @FormField(groupId = 1, indexInGroup = 0)
-    private var name:String? = null;
+    public var name:String? = null;
     @Field(key = "churierpweb.administration.users.dto.filterField.surname")
     @FormField(groupId = 1, indexInGroup = 1)
-    private var surname:String? = null;
+    public var surname:String? = null;
     @Field(key = "churierpweb.administration.users.dto.filterField.creationDateFrom")
     @FormField(groupId = 2, indexInGroup = 0, field = "creationDate", from = true)
-    private var creationDateFrom: Date? = null;
+    public var creationDateFrom: Date? = null;
     @Field(key = "churierpweb.administration.users.dto.filterField.creationDateTo")
     @FormField(groupId = 2, indexInGroup = 1, field = "creationDate", to = true)
-    private var creationDateTo: Date? = null;
+    public var creationDateTo: Date? = null;
     @Field(key = "churierpweb.administration.users.dto.filterField.endDateFrom")
     @FormField(groupId = 3, indexInGroup = 0, field = "endDate", from = true)
-    private var endDateFrom: Date? = null;
+    public var endDateFrom: Date? = null;
     @Field(key = "churierpweb.administration.users.dto.filterField.endDateTo")
     @FormField(groupId = 3, indexInGroup = 1, field = "endDate", to = true)
-    private var endDateTo: Date? = null;
+    public var endDateTo: Date? = null;
 
     override fun validate(): List<String> {
         var errors = ArrayList<String>();
