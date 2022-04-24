@@ -13,6 +13,7 @@ import com.vaadin.flow.router.Route;
 import org.bastanchu.churierp.churierpback.dto.administration.users.UserDto;
 import org.bastanchu.churierp.churierpback.service.UserService;
 import org.bastanchu.churierp.churierpweb.component.view.BodyView;
+import org.bastanchu.churierp.churierpweb.component.view.BodyViewFactory;
 import org.bastanchu.churierp.churierpweb.delegate.MenuDelegate;
 import org.bastanchu.churierp.churierpweb.dto.MenuDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,10 +103,9 @@ public class MainView extends VerticalLayout {
 
     private void initMenuComponent(MenuItem menuItem, MenuDto item) {
         try {
-            if ((item.getClassName() != null) && !item.getClassName().trim().equals("")) {
+            if (item.isDefinedComponent()) {
                 ClassLoader loader = Thread.currentThread().getContextClassLoader();
-                Class<? extends BodyView> viewClass = (Class<? extends BodyView>) loader.loadClass(item.getClassName());
-                final BodyView component = viewClass.getDeclaredConstructor(ApplicationContext.class).newInstance(applicationContext);
+                final BodyView component = item.buildBodyViewComponent(applicationContext);
                 menuItem.addClickListener(e -> {
                     // Remove previous body view if present
                     Stream<? extends Component> children = bodyDiv.getChildren();

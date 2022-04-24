@@ -29,6 +29,7 @@ list:
             url: ""
           - menuText : "churierpweb.menu.administration.users.List"
             url: ""
-            className: "org.bastanchu.churierp.churierpweb.view.administration.users.ThematicUsersView"
+ #           className: "org.bastanchu.churierp.churierpweb.view.administration.users.ThematicUsersView"
+            factoryClassName: "org.bastanchu.churierp.churierpweb.view.administration.users.ThematicUsersView$Factory"
       - menuText: "churierpweb.menu.administration.Companies"
         url: ""
