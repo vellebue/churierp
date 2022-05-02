@@ -4,6 +4,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
@@ -28,6 +29,7 @@ import java.util.Locale;
 import java.util.stream.Stream;
 
 @Route("/main")
+@CssImport(value = "./css/ThematicIcon.css")
 public class MainView extends VerticalLayout {
 
     private MenuDelegate menuDelegate;

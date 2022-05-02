@@ -25,11 +25,12 @@ list:
       - menuText: "churierpweb.menu.administration.Users"
         url: ""
         children:
-          - menuText : "churierpweb.menu.administration.users.Create"
-            url: ""
           - menuText : "churierpweb.menu.administration.users.List"
             url: ""
  #           className: "org.bastanchu.churierp.churierpweb.view.administration.users.ThematicUsersView"
             factoryClassName: "org.bastanchu.churierp.churierpweb.view.administration.users.ThematicUsersView$Factory"
       - menuText: "churierpweb.menu.administration.Companies"
         url: ""
+        children:
+          - menuText : "churierpweb.menu.administration.companies.List"
+            factoryClassName: "org.bastanchu.churierp.churierpweb.view.administration.companies.ThematicCompaniesView$Factory"

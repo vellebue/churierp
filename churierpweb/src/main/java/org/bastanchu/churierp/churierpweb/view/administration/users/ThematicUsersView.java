@@ -14,6 +14,8 @@ public class ThematicUsersView extends FullThematicBodyView<UserDto, UserFilterD
         public BodyView build(ApplicationContext applicationContext) {
             ThematicUsersView userView = new ThematicUsersView(applicationContext);
             userView.addBodyTitle("churierpweb.administration.users.mainView.title")
+                    .addBodyIcon("churierpweb.administration.users.icon.text",
+                            "churierpweb.administration.users.icon.color")
                     .addFilterViewClass(ThematicUsersFilterView.class)
                     .addListViewClass(ThematicUsersListView.class)
                     .addSingleItemViewClass(ThematicUsersSingleItemView.class);

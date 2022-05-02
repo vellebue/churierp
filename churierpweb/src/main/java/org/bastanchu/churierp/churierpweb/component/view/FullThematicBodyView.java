@@ -16,6 +16,13 @@ public abstract class FullThematicBodyView<T,F> extends ThematicBodyView<T, F> {
         return this;
     }
 
+    public FullThematicBodyView<T,F> addBodyIcon(String textKey, String colorKey) {
+        String iconText = getMessageSource().getMessage(textKey, null , LocaleContextHolder.getLocale());
+        String iconColor = getMessageSource().getMessage(colorKey, null, LocaleContextHolder.getLocale());
+        setBoydIcon(iconText, iconColor);
+        return this;
+    }
+
     public FullThematicBodyView<T,F> addFilterViewClass(Class<? extends ThematicBodyFilterView<T,F>> filterViewClass) {
         try {
             ThematicBodyFilterView<T, F> filterView = filterViewClass.getConstructor(ApplicationContext.class).newInstance(getApplicationContext());
