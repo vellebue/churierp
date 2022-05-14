@@ -3,7 +3,7 @@ package org.bastanchu.churierp.churierpback.service.impl
 import org.bastanchu.churierp.churierpback.dao.administration.users.UserDao
 import org.bastanchu.churierp.churierpback.dto.administration.users.UserDto
 import org.bastanchu.churierp.churierpback.dto.administration.users.UserFilterDto
-import org.bastanchu.churierp.churierpback.entity.User
+import org.bastanchu.churierp.churierpback.entity.users.User
 import org.bastanchu.churierp.churierpback.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.MessageDigestPasswordEncoder

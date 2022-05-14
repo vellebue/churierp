@@ -1,4 +1,4 @@
-package org.bastanchu.churierp.churierpback.entity
+package org.bastanchu.churierp.churierpback.entity.users
 
 import java.util.*
 import javax.persistence.*;
