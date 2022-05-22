@@ -16,7 +16,7 @@ create table C_COUNTRIES(COUNTRY_ID varchar(2) PRIMARY KEY, NAME varchar(100) NO
 
 create table C_REGIONS(COUNTRY_ID varchar(2), REGION_ID varchar(10),
                        NAME varchar(100) NOT NULL, KEY varchar(512) NOT null,
-                       primary key(COUNTRY_ID, REGIONID));
+                       primary key(COUNTRY_ID, REGION_ID));
 
 create table ADDRESSES(ADDRESS_ID int PRIMARY KEY, ADDRESS varchar(512) NOT NULL, POSTAL_CODE varchar(15) NOT NULL,
                        CITY varchar(100) NOT NULL, COUNTRY_ID int NOT NULL, REGION_ID int NOT NULL);
