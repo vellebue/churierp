@@ -5,7 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import org.bastanchu.churierp.churierpback.dto.administration.users.UserDto;
 import org.bastanchu.churierp.churierpback.dto.administration.users.UserFilterDto;
-import org.bastanchu.churierp.churierpback.service.UserService;
+import org.bastanchu.churierp.churierpback.service.administration.UserService;
 import org.bastanchu.churierp.churierpweb.component.button.RedButton;
 import org.bastanchu.churierp.churierpweb.component.form.CustomForm;
 import org.bastanchu.churierp.churierpweb.component.button.BlueButton;

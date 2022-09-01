@@ -1,4 +1,4 @@
-package org.bastanchu.churierp.churierpback.service
+package org.bastanchu.churierp.churierpback.service.administration
 
 import org.bastanchu.churierp.churierpback.dto.administration.users.UserDto
 import org.bastanchu.churierp.churierpback.dto.administration.users.UserFilterDto

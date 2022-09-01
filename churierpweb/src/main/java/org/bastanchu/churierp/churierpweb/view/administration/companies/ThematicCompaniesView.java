@@ -16,7 +16,9 @@ public class ThematicCompaniesView extends FullThematicBodyView<CompanyDto, Comp
             ThematicCompaniesView view = new ThematicCompaniesView(applicationContext);
             view.addBodyTitle("churierpweb.administration.companies.mainView.title")
             .addBodyIcon("churierpweb.administration.companies.icon.text",
-                    "churierpweb.administration.companies.icon.color");
+                    "churierpweb.administration.companies.icon.color")
+            .addFilterViewClass(ThematicCompaniesFilterView.class)
+            .addListViewClass(ThematicCompaniesListView.class);
             return view;
         }
     }

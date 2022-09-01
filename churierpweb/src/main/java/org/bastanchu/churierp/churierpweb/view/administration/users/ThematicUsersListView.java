@@ -1,13 +1,15 @@
 package org.bastanchu.churierp.churierpweb.view.administration.users;
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import org.bastanchu.churierp.churierpback.dto.administration.users.UserDto;
 import org.bastanchu.churierp.churierpback.dto.administration.users.UserFilterDto;
-import org.bastanchu.churierp.churierpback.service.UserService;
+import org.bastanchu.churierp.churierpback.service.administration.UserService;
 import org.bastanchu.churierp.churierpweb.component.list.PagedTableComponent;
 import org.bastanchu.churierp.churierpweb.component.button.ButtonBar;
 import org.bastanchu.churierp.churierpweb.component.button.GreenButton;
 import org.bastanchu.churierp.churierpweb.component.view.ThematicBodyListView;
+import org.bastanchu.churierp.churierpweb.component.view.listener.ThematicBodySingleItemViewListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -27,7 +29,7 @@ public class ThematicUsersListView extends ThematicBodyListView<UserDto, UserFil
 
     public ThematicUsersListView(ApplicationContext appContext) {
         super(appContext);
-        setTitle(getMessageSource().getMessage("churierpweb.administration.users.listView.title",
+        setTitle(getMessageSource().getMessage("churierpweb.administration.companies.listView.title",
                 null, LocaleContextHolder.getLocale())
         );
         pagedTableContainer = new Div();
@@ -40,6 +42,12 @@ public class ThematicUsersListView extends ThematicBodyListView<UserDto, UserFil
                 e -> {
                     fireRequestedCreateItem();
         }));
+        buttonBar.addButton(new Button(getMessageSource().getMessage("churierpweb.administration.users.back.button",
+                null,
+                LocaleContextHolder.getLocale()),
+                e -> {
+                    fireBackAction();
+                }));
     }
 
     @Override

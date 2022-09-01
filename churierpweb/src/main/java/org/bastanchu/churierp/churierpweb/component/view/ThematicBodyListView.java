@@ -41,6 +41,12 @@ public abstract class ThematicBodyListView<T, F> extends ThematicBodyElementView
         }
     }
 
+    protected void fireBackAction() {
+        if (listener != null) {
+            listener.onBackAction();
+        }
+    }
+
     protected void fireRequestedCreateItem() {
         if (listener != null) {
             ThematicBodyListViewListener.ListEvent<T, F> event = new ThematicBodyListViewListener.ListEvent<>();

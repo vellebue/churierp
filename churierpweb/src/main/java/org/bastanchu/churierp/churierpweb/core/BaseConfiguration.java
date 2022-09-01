@@ -46,8 +46,9 @@ import java.util.Properties;
 @ComponentScan(basePackages = {
         "org.bastanchu.churierp.churierpweb.delegate.impl",
         "org.bastanchu.churierp.churierpweb.view",
-        "org.bastanchu.churierp.churierpback.dao.impl",
-        "org.bastanchu.churierp.churierpback.service.impl",
+        "org.bastanchu.churierp.churierpback.dao.**.impl",
+        "org.bastanchu.churierp.churierpback.service.**.impl",
+        //"org.bastanchu.churierp.churierpback.service.administration.impl",
         "org.bastanchu.churierp.churierpweb.controller"
 })
 @EnableJpaRepositories

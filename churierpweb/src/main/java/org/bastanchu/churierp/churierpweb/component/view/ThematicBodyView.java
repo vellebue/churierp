@@ -94,6 +94,18 @@ public abstract class ThematicBodyView<T, F> extends BodyView
         */
     }
 
+    // List handlers
+
+    @Override
+    public void onBackAction() {
+        logger.info("Back from list to filter");
+        listView.fireEnd();
+        mainContainer.removeAll();
+        mainContainer.add(filterView);
+        filterView.setListener(this);
+        filterView.fireInit();
+    }
+
     @Override
     public void onSelectedAction(ListEvent<T, F> event) {
         logger.info("Item selected");
@@ -104,6 +116,8 @@ public abstract class ThematicBodyView<T, F> extends BodyView
         singleItemView.setListener(this);
         singleItemView.fireInit();
     }
+
+    // Single Item handler events
 
     @Override
     public void onBackAction(SingleItemEvent<T> event) {

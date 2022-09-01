@@ -6,6 +6,7 @@ import org.bastanchu.churierp.churierpback.util.CopyUtil
 import java.lang.RuntimeException
 import java.lang.reflect.ParameterizedType
 import javax.persistence.EntityManager
+import kotlin.streams.toList
 
 open abstract class BaseDtoDaoImpl<K, E, D> (override val entityManager: EntityManager) : BaseDaoImpl<K, E>(entityManager), BaseDtoDao<K, E, D> {
 
@@ -19,7 +20,7 @@ open abstract class BaseDtoDaoImpl<K, E, D> (override val entityManager: EntityM
         }
     }
 
-    override fun toDataTransferObject(entity: E): D {
+    final override fun toDataTransferObject(entity: E): D {
         val dto:D? = dtoClassTypeClass?.getDeclaredConstructor()?.newInstance();
         if (dto != null) {
             toDataTransferObject(entity, dto);
@@ -27,6 +28,10 @@ open abstract class BaseDtoDaoImpl<K, E, D> (override val entityManager: EntityM
         } else {
             throw RuntimeException("No dto class defined");
         }
+    }
+
+    final override fun toDataTransferObjectList(entityList: List<E>): List<D> {
+        return entityList.stream().map { toDataTransferObject(it) }.toList()
     }
 
     override fun toDataTransferObject(entity: E, dto: D) {

@@ -22,5 +22,5 @@ public interface ThematicBodyListViewListener<T, F> {
 
     public void onRequestCreateAction(ListEvent<T,F> event);
 
-
+    public void onBackAction();
 }
