@@ -1,5 +1,6 @@
 package org.bastanchu.churierp.churierpweb.component.form;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
@@ -9,6 +10,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.bastanchu.churierp.churierpback.util.annotation.ComboBoxConfiguration;
 import org.bastanchu.churierp.churierpback.util.annotation.FormField;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -29,6 +31,11 @@ public class CustomForm<T> extends FormLayout {
     private Class<T> beanClass;
     private BeanValidationBinder<T> binderValidator;
     private Binder<T> binderReader;
+    /**
+     * This map links each field (by its property name) with its corresponding displaying
+     * component in this form.
+     */
+    private Map<String, Component> formComponentsMap = new HashMap<>();
     private MessageSource messageSource;
     private VerticalLayout errorsBox = new VerticalLayout();
 
@@ -36,9 +43,12 @@ public class CustomForm<T> extends FormLayout {
     @AllArgsConstructor
     static class FieldEntry implements Comparable<CustomForm.FieldEntry>{
 
+        private Object objectBean;
         private FormField formField;
         private String fieldLabel;
         private Class<?> fieldType;
+        private Integer colSpan;
+        private ComboBoxConfiguration comboBoxConfiguration;
         private Field field;
 
         public boolean equals(Object o) {
@@ -70,7 +80,7 @@ public class CustomForm<T> extends FormLayout {
         this.messageSource = messageSource;
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
-        Map<Integer, Set<CustomForm.FieldEntry>> formGroupsMap = buildFormGroups(beanClass);
+        Map<Integer, Set<CustomForm.FieldEntry>> formGroupsMap = buildFormGroups(bean);
         errorsBox.getStyle().set("width", "100%");
         buildForm(formGroupsMap);
     }
@@ -79,17 +89,21 @@ public class CustomForm<T> extends FormLayout {
         this.getStyle().set("width", width + "%");
     }
 
-    private Map<Integer, Set<CustomForm.FieldEntry>> buildFormGroups(Class<?> dtoClass) {
+    private Map<Integer, Set<CustomForm.FieldEntry>> buildFormGroups(T bean) {
         Map<Integer, Set<CustomForm.FieldEntry>> map = new TreeMap<>();
+        Class<?> dtoClass = bean.getClass();
         Field[] fields = dtoClass.getDeclaredFields();
         for (Field field : fields) {
             if (field.getAnnotation(org.bastanchu.churierp.churierpback.util.annotation.FormField.class) != null) {
                 org.bastanchu.churierp.churierpback.util.annotation.FormField formFieldAnnotation =
                         field.getAnnotation(org.bastanchu.churierp.churierpback.util.annotation.FormField.class);
+                org.bastanchu.churierp.churierpback.util.annotation.ComboBoxConfiguration comboBoxConfiguration =
+                        formFieldAnnotation.comboBoxConfiguration();
                 if (field.getAnnotation(org.bastanchu.churierp.churierpback.util.annotation.Field.class) != null) {
                     org.bastanchu.churierp.churierpback.util.annotation.Field fieldAnnotation =
                             field.getAnnotation(org.bastanchu.churierp.churierpback.util.annotation.Field.class);
                     Integer groupId = formFieldAnnotation.groupId();
+                    Integer colSpan = formFieldAnnotation.colSpan();
                     Set<CustomForm.FieldEntry> fieldEntrySet = null;
                     if ((fieldEntrySet = map.get(groupId)) == null) {
                         fieldEntrySet = new TreeSet<>();
@@ -97,8 +111,9 @@ public class CustomForm<T> extends FormLayout {
                     }
                     Integer fieldIndexIngroup = formFieldAnnotation.indexInGroup();
                     String labelText = messageSource.getMessage(fieldAnnotation.key(), null, LocaleContextHolder.getLocale());
+
                     Class<?> fieldClass = field.getType();
-                    fieldEntrySet.add(new CustomForm.FieldEntry(formFieldAnnotation, labelText, fieldClass, field));
+                    fieldEntrySet.add(new CustomForm.FieldEntry(bean, formFieldAnnotation, labelText, fieldClass, colSpan, comboBoxConfiguration, field));
                 }
             }
         }
@@ -132,11 +147,14 @@ public class CustomForm<T> extends FormLayout {
         Integer biggestGroupSize = getBiggestFormGroupsize(formGroupsMap);
         setColspan(new Div(), biggestGroupSize * 2);
         for (Set<CustomForm.FieldEntry> groupSet :formGroupsMap.values()) {
+            int groupSetSize = 0;
             for (CustomForm.FieldEntry fieldEntry:groupSet) {
-                addFieldToForm(fieldEntry);
+                FormLayout.FormItem formItem = addFieldToForm(fieldEntry);
+                setColspan(formItem, fieldEntry.getColSpan());
+                groupSetSize += fieldEntry.getColSpan();
             }
-            if (biggestGroupSize > groupSet.size()) {
-                Integer diff = biggestGroupSize - groupSet.size();
+            if (biggestGroupSize > groupSetSize) {
+                Integer diff = biggestGroupSize - groupSetSize;
                 for (int i = 0 ; i < diff ; i++) {
                     addFormItem(new Div(), "");
                 }
@@ -146,21 +164,32 @@ public class CustomForm<T> extends FormLayout {
         add(errorsBox, biggestGroupSize * 2);
     }
 
-    private void addFieldToForm(CustomForm.FieldEntry fieldEntry) {
+    private FormLayout.FormItem addFieldToForm(CustomForm.FieldEntry fieldEntry) {
         Class<?> fieldType = fieldEntry.getFieldType();
-        if (Date.class.isAssignableFrom(fieldType)) {
-            DateFormMapper<T> dateFormMapper =
-                    new DateFormMapper<>(beanClass, binderValidator, binderReader, validator);
-            dateFormMapper.mapFormEntry(this, fieldEntry);
-        } else if (Integer.class.isAssignableFrom(fieldType)) {
-            IntegerFormMapper<T> integerFormMapper =
-                    new IntegerFormMapper<>(beanClass, binderValidator, binderReader,validator);
-            integerFormMapper.mapFormEntry(this, fieldEntry);
-        } else {
-            StringFormMapper<T> stringFormMapper =
-                    new StringFormMapper<>(beanClass, binderValidator, binderReader, validator);
-            stringFormMapper.mapFormEntry(this, fieldEntry);
+        FormLayout.FormItem formItem = null;
+        if (!fieldEntry.comboBoxConfiguration.mapFieldName().equals("")) {
+            //Combo Box
+            ComboBoxFormMapper<T> comboBoxFormMapper =
+                    new ComboBoxFormMapper<>(beanClass, binderValidator, binderReader, validator, formComponentsMap);
+            formItem = comboBoxFormMapper.mapFormEntry(this, fieldEntry);
         }
+        else if (Date.class.isAssignableFrom(fieldType)) {
+            // Date Picker
+            DateFormMapper<T> dateFormMapper =
+                    new DateFormMapper<>(beanClass, binderValidator, binderReader, validator, formComponentsMap);
+            formItem = dateFormMapper.mapFormEntry(this, fieldEntry);
+        } else if (Integer.class.isAssignableFrom(fieldType)) {
+            // Number Text Field
+            IntegerFormMapper<T> integerFormMapper =
+                    new IntegerFormMapper<>(beanClass, binderValidator, binderReader,validator, formComponentsMap);
+            formItem = integerFormMapper.mapFormEntry(this, fieldEntry);
+        } else {
+            // Generic Text Field
+            StringFormMapper<T> stringFormMapper =
+                    new StringFormMapper<>(beanClass, binderValidator, binderReader, validator, formComponentsMap);
+            formItem = stringFormMapper.mapFormEntry(this, fieldEntry);
+        }
+        return formItem;
     }
 
     public void addErrorMessageKey(String errorMessageKey, Object[] parameters) {

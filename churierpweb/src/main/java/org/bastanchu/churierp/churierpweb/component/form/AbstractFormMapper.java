@@ -1,5 +1,7 @@
 package org.bastanchu.churierp.churierpweb.component.form;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
@@ -10,6 +12,8 @@ import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 abstract class AbstractFormMapper<T> {
@@ -18,18 +22,21 @@ abstract class AbstractFormMapper<T> {
     protected BeanValidationBinder<T> binderValidator;
     protected Binder<T> binderReader;
     protected Validator validator;
+    protected Map<String, Component> formComponentsMap;
 
     public AbstractFormMapper(Class<T> beanClass,
                               BeanValidationBinder<T> binderValidator,
                               Binder<T>binderReader,
-                              Validator validator) {
+                              Validator validator,
+                              Map<String, Component> formComponentsMap) {
         this.beanClass = beanClass;
         this.binderValidator = binderValidator;
         this.binderReader = binderReader;
         this.validator = validator;
+        this.formComponentsMap = formComponentsMap;
     }
 
-    public abstract void mapFormEntry(CustomForm form, CustomForm.FieldEntry fieldEntry);
+    public abstract FormLayout.FormItem mapFormEntry(CustomForm form, CustomForm.FieldEntry fieldEntry);
 
     protected Object binderGetter(Field field, Object e) {
         try {
