@@ -35,27 +35,7 @@ public class ComboBoxFormMapper<T> extends AbstractFormMapper<T> {
     @Override
     public FormLayout.FormItem mapFormEntry(CustomForm form, CustomForm.FieldEntry fieldEntry) {
         Field field = fieldEntry.getField();
-
-        /*
-        String conditionFieldName = fieldEntry.getComboBoxConfiguration().conditionFieldName();
-        if (conditionFieldName.equals("")) {
-            Map<String, String> itemsMap = getComboItemsMap(fieldEntry);
-            List<String> itemKeys = itemsMap.entrySet().stream().sorted((e1, e2) -> {
-                if (e1.getValue().equals(e2.getValue())) {
-                    return e1.getKey().compareTo(e2.getKey());
-                } else {
-                    return e1.getValue().compareTo(e2.getValue());
-                }
-            }).map(e -> e.getKey()).collect(Collectors.toList());
-            ComboBox<String> formComponent = new ComboBox<>();
-            formComponent.setItems(itemKeys);
-            formComponent.setItemLabelGenerator(e -> e + " - " + itemsMap.get(e));
-        } else {
-            ComboBox<String>
-        }
-        */
         ComboBox<String> formComponent = generateComboBox(fieldEntry);
-
         if (fieldEntry.getFormField().readOnly()) {
             formComponent.setReadOnly(true);
         }
@@ -128,48 +108,14 @@ public class ComboBoxFormMapper<T> extends AbstractFormMapper<T> {
             throw new RuntimeException("Map field " + mapFieldName + " not found in DTO class " + beanClass.getName());
         }
         Map<String,String> mapFieldValue = null;
-        if (conditionFieldName.equals("")) {
-            // Single map of values Map<String, String>
-            try {
-                mapField.setAccessible(true);
-                mapFieldValue = (Map<String, String>) mapField.get(fieldEntry.getObjectBean());
-            } catch (ClassCastException e) {
-                throw new RuntimeException("Map field " + mapFieldName + " in DTO class " + beanClass.getName() + " should be a Map<String, String> field");
-            } catch (IllegalAccessException e) {
-                // TODO this may not happen if private accessor is unlocked
-            }
-        } else {
-            /*
-            // Conditioned map of values Map<String, Map<String, String>>
-            Map<String, Map<String, String>> conditionedMapFieldValue = null;
-            try {
-                mapField.setAccessible(true);
-                conditionedMapFieldValue = (Map<String, Map<String,String>>) mapField.get(fieldEntry.getObjectBean());
-            } catch (ClassCastException e) {
-                throw new RuntimeException("Map field " + mapFieldName + " in DTO class " + beanClass.getName() + " should be a Map<String, String> field");
-            } catch (IllegalAccessException e) {
-                // TODO this may not happen if private accessor is unlocked
-            }
-            Field conditionedField = null;
-            try {
-                conditionedField = beanClass.getDeclaredField(conditionFieldName);
-            } catch (NoSuchFieldException e) {
-                throw new RuntimeException("Conditioning field " + conditionFieldName + " not found in DTO class " + beanClass.getName());
-            }
-            String conditionedFieldValue = null;
-            try {
-                conditionedField.setAccessible(true);
-                conditionedFieldValue = (String) conditionedField.get(fieldEntry.getObjectBean());
-            } catch(ClassCastException e) {
-                throw new RuntimeException("Conditioning field " + conditionFieldName + " in DTO class " + beanClass.getName() + " must be typed String");
-            } catch (IllegalAccessException e) {
-                // TODO this may not happen if private accessor is unlocked
-            }
-            mapFieldValue = conditionedMapFieldValue.get(conditionedFieldValue);
-            if (mapFieldValue == null) {
-                mapFieldValue = new HashMap<>();
-            }
-            */
+        // Single map of values Map<String, String>
+        try {
+            mapField.setAccessible(true);
+            mapFieldValue = (Map<String, String>) mapField.get(fieldEntry.getObjectBean());
+        } catch (ClassCastException e) {
+            throw new RuntimeException("Map field " + mapFieldName + " in DTO class " + beanClass.getName() + " should be a Map<String, String> field");
+        } catch (IllegalAccessException e) {
+            // TODO this may not happen if private accessor is unlocked
         }
         return mapFieldValue;
     }
@@ -208,12 +154,6 @@ public class ComboBoxFormMapper<T> extends AbstractFormMapper<T> {
         } catch (IllegalAccessException e) {
             // TODO this may not happen if private accessor is unlocked
         }
-        /*
-        mapFieldValue = conditionedMapFieldValue.get(conditionedFieldValue);
-        if (mapFieldValue == null) {
-            mapFieldValue = new HashMap<>();
-        }
-        */
         return conditionedMapFieldValue;
     }
 
