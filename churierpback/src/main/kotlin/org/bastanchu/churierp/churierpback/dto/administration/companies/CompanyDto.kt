@@ -1,9 +1,6 @@
 package org.bastanchu.churierp.churierpback.dto.administration.companies
 
-import org.bastanchu.churierp.churierpback.util.annotation.ComboBoxConfiguration
-import org.bastanchu.churierp.churierpback.util.annotation.Field
-import org.bastanchu.churierp.churierpback.util.annotation.FormField
-import org.bastanchu.churierp.churierpback.util.annotation.ListField
+import org.bastanchu.churierp.churierpback.util.annotation.*
 import org.hibernate.validator.constraints.NotEmpty
 import javax.validation.constraints.Size
 
@@ -39,6 +36,7 @@ class CompanyDto {
 
     // Address fields
 
+    @HiddenFormField
     var addressId : Integer? = null
 
     var type: String? = null

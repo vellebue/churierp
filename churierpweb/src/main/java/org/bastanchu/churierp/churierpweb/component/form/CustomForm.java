@@ -36,6 +36,10 @@ public class CustomForm<T> extends FormLayout {
      * component in this form.
      */
     private Map<String, Component> formComponentsMap = new HashMap<>();
+    /**
+     * This map links each hidden field (by its property name) with its value in this form
+     */
+    private Map<String, Object> formHiddenValuesMap = new HashMap<>();
     private MessageSource messageSource;
     private VerticalLayout errorsBox = new VerticalLayout();
 
@@ -115,6 +119,9 @@ public class CustomForm<T> extends FormLayout {
                     Class<?> fieldClass = field.getType();
                     fieldEntrySet.add(new CustomForm.FieldEntry(bean, formFieldAnnotation, labelText, fieldClass, colSpan, comboBoxConfiguration, field));
                 }
+            } else if (field.getAnnotation(org.bastanchu.churierp.churierpback.util.annotation.HiddenFormField.class) != null) {
+                    // Fill initial null value for hidden field
+                    formHiddenValuesMap.put(field.getName(), null);
             }
         }
         return map;
@@ -210,6 +217,7 @@ public class CustomForm<T> extends FormLayout {
         removeErrorMessages();
         try {
             binderValidator.writeBean(targetBean);
+            writeHiddenValues(targetBean);
             if (targetBean instanceof org.bastanchu.churierp.churierpback.dto.Validator) {
                 org.bastanchu.churierp.churierpback.dto.Validator validable =
                         (org.bastanchu.churierp.churierpback.dto.Validator) targetBean;
@@ -233,6 +241,46 @@ public class CustomForm<T> extends FormLayout {
 
     public void readBean(T sourceBean) {
         binderValidator.readBean(sourceBean);
+        readHiddenValues(sourceBean);
     }
 
+    private void writeHiddenValues(T bean) {
+        for (String fieldName : formHiddenValuesMap.keySet()) {
+            Field field = null;
+            try {
+                field = bean.getClass().getDeclaredField(fieldName);
+            } catch (NoSuchFieldException e) {
+                //This may not happen
+                throw new RuntimeException(e);
+            }
+            Object value = formHiddenValuesMap.get(fieldName);
+            try {
+                field.setAccessible(true);
+                field.set(bean, value);
+            } catch (IllegalAccessException e) {
+                // This may not happen
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void readHiddenValues(T bean) {
+        for (String fieldName : formHiddenValuesMap.keySet()) {
+            Field field = null;
+            try {
+                field = bean.getClass().getDeclaredField(fieldName);
+            } catch (NoSuchFieldException e) {
+                //This may not happen
+                throw new RuntimeException(e);
+            }
+            Object value = null;
+            try {
+                field.setAccessible(true);
+                value = field.get(bean);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            formHiddenValuesMap.put(fieldName, value);
+        }
+    }
 }

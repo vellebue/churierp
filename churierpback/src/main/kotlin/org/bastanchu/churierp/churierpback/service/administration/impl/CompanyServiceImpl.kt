@@ -23,5 +23,26 @@ class CompanyServiceImpl(@Autowired val companyDao: CompaniesDao) : CompanyServi
         return companyDao.toDataTransferObject(company)
     }
 
+    override fun createCompany(companyDto: CompanyDto):CompanyDto {
+        val company = companyDao.fromDtoToEntity(companyDto)
+        companyDao.create(company)
+        return companyDao.toDataTransferObject(company)
+    }
+
+    override fun updateCompany(companyDto: CompanyDto) {
+        companyDao.fromDtoToEntity(companyDto)
+    }
+
+    override fun deleteCompany(companyDto: CompanyDto) {
+        if (companyDto != null) {
+            if (companyDto.companyId == null) {
+                throw RuntimeException("While deleting company, companyId is null")
+            } else {
+                companyDao.deleteById(companyDto.companyId as Integer)
+            }
+        } else {
+            throw RuntimeException("While deleting company, companyDto is null")
+        }
+    }
 
 }

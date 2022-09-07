@@ -9,4 +9,10 @@ interface CompanyService {
 
     fun getCompanyById(companyId : Integer) : CompanyDto?
 
+    fun createCompany(companyDto: CompanyDto) : CompanyDto
+
+    fun updateCompany(companyDto: CompanyDto)
+
+    fun deleteCompany(companyDto : CompanyDto)
+
 }

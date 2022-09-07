@@ -49,14 +49,17 @@ open abstract class BaseDtoDaoImpl<K, E, D> (override val entityManager: EntityM
         if (keyValue != null) {
             val targetEntity = getById(keyValue);
             if (targetEntity != null) {
-                copyUtils.copyValues(dto as Any, targetEntity as Any);
+                //copyUtils.copyValues(dto as Any, targetEntity as Any);
+                fromDtoToEntity(dto, targetEntity)
                 return targetEntity;
             } else {
                 //copyUtils.copyValues(dto as Any, candidateEntity as Any);
+                fromDtoToEntity(dto, targetEntity)
                 return candidateEntity;
             }
         } else {
             //copyUtils.copyValues(dto as Any, candidateEntity as Any);
+            fromDtoToEntity(dto, candidateEntity)
             return candidateEntity;
         }
     }
