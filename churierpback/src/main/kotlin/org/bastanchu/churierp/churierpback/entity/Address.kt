@@ -4,7 +4,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "ADDRESSES")
-class Address {
+class Address : TraceableEntity() {
 
     public enum class AddressType(var type:String) {
         ADDRESS_TYPE_COMPANY("COMP");

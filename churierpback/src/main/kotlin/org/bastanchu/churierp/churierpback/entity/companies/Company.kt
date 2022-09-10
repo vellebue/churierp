@@ -1,11 +1,12 @@
 package org.bastanchu.churierp.churierpback.entity.companies
 
 import org.bastanchu.churierp.churierpback.entity.Address
+import org.bastanchu.churierp.churierpback.entity.TraceableEntity
 import javax.persistence.*;
 
 @Entity
 @Table(name = "COMPANIES")
-class Company {
+class Company : TraceableEntity() {
 
     @Id
     @Column(name = "COMPANY_ID")

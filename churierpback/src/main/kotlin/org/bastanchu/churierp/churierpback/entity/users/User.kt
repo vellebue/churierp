@@ -1,36 +1,37 @@
 package org.bastanchu.churierp.churierpback.entity.users
 
+import org.bastanchu.churierp.churierpback.entity.TraceableEntity
 import java.util.*
-import javax.persistence.*;
+import javax.persistence.*
 
 @Entity
 @Table(name = "USERS")
-class User {
+class User : TraceableEntity() {
 
     @Id
     @Column(name = "USER_ID")
     @GeneratedValue(generator = "seq_user")
     @SequenceGenerator(name = "seq_user", sequenceName = "SEQ_USERS", allocationSize = 1)
-    var userId: Integer? = null;
+    var userId: Integer? = null
 
     @Column(name = "LOGIN", nullable = false)
-    var login: String? = null;
+    var login: String? = null
 
     @Column(name = "PASSWORD", nullable = false)
-    var password: String? = null;
+    var password: String? = null
 
     @Column(name = "NAME", nullable = false)
-    var name: String? = null;
+    var name: String? = null
 
     @Column(name = "SURNAME", nullable = false)
-    var surname: String? = null;
+    var surname: String? = null
 
     @Column(name = "EMAIL", nullable = true)
-    var email: String? = null;
+    var email: String? = null
 
     @Column(name = "CREATION_DATE", nullable = false)
-    var creationDate: Date? = null;
+    var creationDate: Date? = null
 
     @Column(name = "END_DATE")
-    var endDate: Date? = null;
+    var endDate: Date? = null
 }
