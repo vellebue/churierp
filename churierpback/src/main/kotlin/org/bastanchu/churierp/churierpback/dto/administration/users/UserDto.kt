@@ -1,5 +1,6 @@
 package org.bastanchu.churierp.churierpback.dto.administration.users
 
+import org.bastanchu.churierp.churierpback.util.annotation.ComboBoxConfiguration
 import org.bastanchu.churierp.churierpback.util.annotation.Field
 import org.bastanchu.churierp.churierpback.util.annotation.FormField
 import org.bastanchu.churierp.churierpback.util.annotation.ListField
@@ -57,5 +58,13 @@ class UserDto {
     @FormField(groupId = 4, indexInGroup = 1)
     @ListField(selected = false)
     var endDate: Date? = null;
+
+    @Field(key = "churierpweb.administration.users.dto.field.language")
+    @FormField(groupId = 5, indexInGroup = 0,
+               comboBoxConfiguration = ComboBoxConfiguration(mapFieldName = "languagesMap"))
+    @ListField(selected = false)
+    var languageId : String? = null
+
+    var languagesMap : Map<String, String>? = null;
 
 }

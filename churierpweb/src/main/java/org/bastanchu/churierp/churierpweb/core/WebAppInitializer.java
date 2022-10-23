@@ -24,6 +24,6 @@ public class WebAppInitializer extends VaadinMVCWebAppInitializer {
     @Override
     protected Collection<Class<?>> getConfigurationClasses() {
         // Add configuration classes you need here (datasources...)
-        return Arrays.asList(BaseConfiguration.class, WebSecurityConfiguration.class);
+        return Arrays.asList(BaseConfiguration.class, WebConfiguration.class, WebSecurityConfiguration.class);
     }
 }

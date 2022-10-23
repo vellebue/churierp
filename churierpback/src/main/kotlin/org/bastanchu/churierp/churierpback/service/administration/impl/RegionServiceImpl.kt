@@ -1,7 +1,6 @@
 package org.bastanchu.churierp.churierpback.service.administration.impl
 
 import org.bastanchu.churierp.churierpback.dao.administration.companies.RegionsDao
-import org.bastanchu.churierp.churierpback.entity.companies.Region
 import org.bastanchu.churierp.churierpback.service.administration.RegionService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired

@@ -6,12 +6,14 @@ import org.bastanchu.churierp.churierpback.dto.administration.users.UserFilterDt
 import org.bastanchu.churierp.churierpback.entity.users.User
 import org.bastanchu.churierp.churierpback.service.administration.UserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.security.crypto.password.MessageDigestPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 
-@Service
+@Service("userService")
+@Qualifier("userService")
 @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
 class UserServiceImpl (@Autowired val userDao: UserDao) : UserService {
 

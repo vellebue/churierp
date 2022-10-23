@@ -1,5 +1,6 @@
 package org.bastanchu.churierp.churierpback.entity.users
 
+import org.bastanchu.churierp.churierpback.entity.Language
 import org.bastanchu.churierp.churierpback.entity.TraceableEntity
 import java.util.*
 import javax.persistence.*
@@ -34,4 +35,9 @@ class User : TraceableEntity() {
 
     @Column(name = "END_DATE")
     var endDate: Date? = null
+
+    @OneToOne(cascade = arrayOf(CascadeType.ALL) )
+    @JoinColumn(name = "language_id")
+    @org.hibernate.annotations.Fetch(org.hibernate.annotations.FetchMode.JOIN)
+    var language : Language? = null
 }

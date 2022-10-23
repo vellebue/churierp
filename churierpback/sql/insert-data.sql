@@ -1,3 +1,8 @@
+--Languages model
+insert into C_LANGUAGES(ID, LANG_ID, COUNTRY_ID, LANGUAGE_KEY) values
+(0, 'en', null, 'language.en'),
+(1, 'es', 'ES', 'language.es.ES');
+
 --Users Model
 
 --User login angel passwd angel8
@@ -11,5 +16,3 @@ INSERT INTO c_address_types (type_id,description,"key") VALUES
 	 ('COMP', 'Company Address', 'churierpweb.address.type.comp');
 
 commit;
-
-

@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import org.bastanchu.churierp.churierpback.dto.administration.users.UserDto;
 import org.bastanchu.churierp.churierpback.dto.administration.users.UserFilterDto;
+import org.bastanchu.churierp.churierpback.service.LanguageService;
 import org.bastanchu.churierp.churierpback.service.administration.UserService;
 import org.bastanchu.churierp.churierpweb.component.button.RedButton;
 import org.bastanchu.churierp.churierpweb.component.form.CustomForm;
@@ -18,18 +19,26 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.util.List;
+import java.util.Map;
 
 public class ThematicUsersSingleItemView extends ThematicBodySingleItemView<UserDto> {
 
-    private CustomForm<UserDto> form = new CustomForm<>(new UserDto(), getMessageSource());
+    private CustomForm<UserDto> form = null;//new CustomForm<>(new UserDto(), getMessageSource());
+    private Map<String, String> languagesMap = null;
     @Autowired
     private UserService userService;
+    @Autowired
+    private LanguageService languageService;
 
     public ThematicUsersSingleItemView(ApplicationContext appContext) {
         super(appContext);
         setTitle(getMessageSource().getMessage("churierpweb.administration.users.singleItemView.title",
                 null,
                 LocaleContextHolder.getLocale()));
+        languagesMap = languageService.getAllLanguagesMap(LocaleContextHolder.getLocale());
+        UserDto userInitialModelDto = new UserDto();
+        userInitialModelDto.setLanguagesMap(languagesMap);
+        form = new CustomForm<>(userInitialModelDto, getMessageSource());
         form.setWidthPercentage(50.0);
         add(form);
         add(getCreateButtonBar());
@@ -167,11 +176,14 @@ public class ThematicUsersSingleItemView extends ThematicBodySingleItemView<User
         remove(component);
         if (itemModel != null) {
             // Update mode
+            itemModel.setLanguagesMap(languagesMap);
             form.readBean(itemModel);
             add(getUpdateButtonBar());
         } else {
             // Create mode
-            form.readBean(new UserDto());
+            itemModel = new UserDto();
+            itemModel.setLanguagesMap(languagesMap);
+            form.readBean(itemModel);
             add(getCreateButtonBar());
         }
 

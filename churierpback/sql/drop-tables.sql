@@ -12,3 +12,6 @@ drop table C_COUNTRIES;
 --Users Model
 drop sequence SEQ_USERS;
 drop table USERS;
+
+--Languages Model
+drop table C_LANGUAGES;
