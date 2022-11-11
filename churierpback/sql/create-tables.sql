@@ -1,6 +1,8 @@
 --Languages model
 create table C_LANGUAGES(ID int PRIMARY KEY, LANG_ID VARCHAR(2) NOT NULL, COUNTRY_ID VARCHAR(2) NULL, LANGUAGE_KEY VARCHAR(100) NOT NULL);
 
+--ADMINISTRATION
+
 --Users Model
 create table USERS(USER_ID int PRIMARY KEY,
                    CREATION_USER VARCHAR(100) NOT NULL, CREATION_TIME TIMESTAMP NOT NULL, UPDATE_USER VARCHAR(100) NOT NULL, UPDATE_TIME TIMESTAMP NOT NULL,
@@ -52,3 +54,20 @@ create sequence SEQ_COMPANIES
     start with 0
     cycle
     owned by COMPANIES.COMPANY_ID;
+
+--ACCOUNTING
+
+--VAT Data Master model
+create table VAT_TYPES(COUNTRY_ID varchar(2) NOT NULL REFERENCES C_COUNTRIES(COUNTRY_ID),
+                       VAT_ID varchar(2) NOT NULL,
+                       CREATION_USER VARCHAR(100) NOT NULL, CREATION_TIME TIMESTAMP NOT NULL, UPDATE_USER VARCHAR(100) NOT NULL, UPDATE_TIME TIMESTAMP NOT NULL,
+                       DESCRIPTION varchar(256) NOT NULL,
+                       primary key (COUNTRY_ID, VAT_ID));
+
+create table VAT_VALUES(COUNTRY_ID varchar(2) NOT NULL ,
+                        VAT_ID varchar(2) NOT NULL,
+                        VALID_FROM date NOT NULL, VALID_TO date NULL,
+                        CREATION_USER VARCHAR(100) NOT NULL, CREATION_TIME TIMESTAMP NOT NULL, UPDATE_USER VARCHAR(100) NOT NULL, UPDATE_TIME TIMESTAMP NOT NULL,
+                        PERCENTAGE DECIMAL(3,2) NOT NULL,
+                        primary key(COUNTRY_ID, VAT_ID, VALID_FROM),
+                        constraint fk_vat_values_vat_regions foreign key (COUNTRY_ID, VAT_ID) references VAT_TYPES(COUNTRY_ID, VAT_ID));

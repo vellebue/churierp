@@ -4,8 +4,7 @@ import org.bastanchu.churierp.churierpback.dao.LanguagesDao
 import org.bastanchu.churierp.churierpback.dao.administration.users.UserDao
 import org.bastanchu.churierp.churierpback.dao.impl.BaseDtoDaoImpl
 import org.bastanchu.churierp.churierpback.dto.administration.users.UserDto
-import org.bastanchu.churierp.churierpback.entity.Language
-import org.bastanchu.churierp.churierpback.entity.users.User
+import org.bastanchu.churierp.churierpback.entity.administration.users.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Propagation

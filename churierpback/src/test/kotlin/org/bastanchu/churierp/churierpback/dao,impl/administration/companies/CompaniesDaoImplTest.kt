@@ -2,7 +2,7 @@ package org.bastanchu.churierp.churierpback.`dao,impl`.administration.companies
 
 import org.bastanchu.churierp.churierpback.dao.impl.administration.companies.CompaniesDaoImpl
 import org.bastanchu.churierp.churierpback.entity.Address
-import org.bastanchu.churierp.churierpback.entity.companies.Company
+import org.bastanchu.churierp.churierpback.entity.administration.companies.Company
 
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -11,9 +11,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.easymock.EasyMock.createMock
 
 import javax.persistence.*
-import javax.persistence.criteria.*
-import javax.persistence.metamodel.*
-
 
 
 @Tag("unitTest")

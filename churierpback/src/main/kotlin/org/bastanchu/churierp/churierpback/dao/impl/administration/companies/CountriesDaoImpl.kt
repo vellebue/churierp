@@ -8,8 +8,8 @@ import org.bastanchu.churierp.churierpback.dao.administration.companies.RegionsD
 import org.bastanchu.churierp.churierpback.dao.impl.BaseDtoDaoImpl
 import org.bastanchu.churierp.churierpback.dto.administration.companies.AreaDto
 import org.bastanchu.churierp.churierpback.dto.administration.companies.CountryDto
-import org.bastanchu.churierp.churierpback.entity.companies.Country
-import org.bastanchu.churierp.churierpback.entity.companies.Region
+import org.bastanchu.churierp.churierpback.entity.administration.companies.Country
+import org.bastanchu.churierp.churierpback.entity.administration.companies.Region
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository

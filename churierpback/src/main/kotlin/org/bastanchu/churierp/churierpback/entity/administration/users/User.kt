@@ -1,4 +1,4 @@
-package org.bastanchu.churierp.churierpback.entity.users
+package org.bastanchu.churierp.churierpback.entity.administration.users
 
 import org.bastanchu.churierp.churierpback.entity.Language
 import org.bastanchu.churierp.churierpback.entity.TraceableEntity

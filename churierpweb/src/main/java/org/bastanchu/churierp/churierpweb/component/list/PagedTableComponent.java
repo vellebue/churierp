@@ -48,12 +48,13 @@ public class PagedTableComponent<T> extends VerticalLayout
 
     private static final int DEFAULT_PAGE_SIZE = 5;
     private static final int DEFAULT_PAGINATOR_SIZE = 3;
-    private static final int DEFAULT_WIDTH_PERCENTAGE = 80;
+    private static final double DEFAULT_WIDTH_PERCENTAGE = 80.0;
 
     private Class<T> modelClass;
     private MessageSource messageSource;
     private Div gridContainer = new Div();
     private PaginatedGrid<T> grid;
+    private Double widthPercentage = DEFAULT_WIDTH_PERCENTAGE;
     private PagedTableComponentListener<T> listener;
     private List<Field> displayableFields;
     private List<Field> availableFields;
@@ -154,13 +155,20 @@ public class PagedTableComponent<T> extends VerticalLayout
         }
     }
 
+    protected Double getWidthPercentage() {
+        return widthPercentage;
+    }
 
+    public void setWidthPercentage(Double widthPercentage) {
+        this.widthPercentage = widthPercentage;
+        getStyle().set("width", "" + widthPercentage + "%");
+    }
 
     private void setHeadings() {
         getStyle().set("margin-left", "auto");
         getStyle().set("margin-right", "auto");
         getStyle().set("display", "block");
-        getStyle().set("width", "" + DEFAULT_WIDTH_PERCENTAGE + "%");
+        getStyle().set("width", "" + widthPercentage + "%");
     }
 
     private String getFieldTitleKey(Field field) {

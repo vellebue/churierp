@@ -23,7 +23,9 @@ public class ThematicIcon extends Div {
         Div innerDiv = new Div();
         Span span = new Span();
         outerDiv.addClassName("divIcon");
+        outerDiv.getStyle().set("background-color", iconColor);
         innerDiv.addClassName("divInner");
+        innerDiv.getStyle().set("background-color", iconColor);
         outerDiv.add(innerDiv);
         span.setText(iconText);
         innerDiv.add(span);

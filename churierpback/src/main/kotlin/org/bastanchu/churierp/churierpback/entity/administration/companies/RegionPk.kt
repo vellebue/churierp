@@ -1,4 +1,4 @@
-package org.bastanchu.churierp.churierpback.entity.companies
+package org.bastanchu.churierp.churierpback.entity.administration.companies
 
 import java.io.Serializable;
 

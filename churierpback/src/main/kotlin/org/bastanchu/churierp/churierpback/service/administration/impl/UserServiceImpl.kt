@@ -3,7 +3,7 @@ package org.bastanchu.churierp.churierpback.service.administration.impl
 import org.bastanchu.churierp.churierpback.dao.administration.users.UserDao
 import org.bastanchu.churierp.churierpback.dto.administration.users.UserDto
 import org.bastanchu.churierp.churierpback.dto.administration.users.UserFilterDto
-import org.bastanchu.churierp.churierpback.entity.users.User
+import org.bastanchu.churierp.churierpback.entity.administration.users.User
 import org.bastanchu.churierp.churierpback.service.administration.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier

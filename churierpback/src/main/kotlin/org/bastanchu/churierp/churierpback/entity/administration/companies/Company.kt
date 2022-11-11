@@ -1,4 +1,4 @@
-package org.bastanchu.churierp.churierpback.entity.companies
+package org.bastanchu.churierp.churierpback.entity.administration.companies
 
 import org.bastanchu.churierp.churierpback.entity.Address
 import org.bastanchu.churierp.churierpback.entity.TraceableEntity

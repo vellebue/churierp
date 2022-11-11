@@ -4,7 +4,7 @@ import org.bastanchu.churierp.churierpback.dao.administration.companies.Companie
 import org.bastanchu.churierp.churierpback.dao.impl.BaseDtoDaoImpl
 import org.bastanchu.churierp.churierpback.dto.administration.companies.CompanyDto
 import org.bastanchu.churierp.churierpback.entity.Address
-import org.bastanchu.churierp.churierpback.entity.companies.Company
+import org.bastanchu.churierp.churierpback.entity.administration.companies.Company
 import org.bastanchu.churierp.churierpback.util.CopyUtil
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Propagation

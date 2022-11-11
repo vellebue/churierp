@@ -1,6 +1,7 @@
 package org.bastanchu.churierp.churierpweb.component.form;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasEnabled;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
@@ -37,6 +38,16 @@ public class CustomForm<T> extends FormLayout {
      */
     private Map<String, Component> formComponentsMap = new HashMap<>();
     /**
+     * This map links each field (by its property name) with its corresponding logical component
+     * in this form.
+     */
+    private Map<String, FormItem> formItemsMap = new HashMap<>();
+    /**
+     * This map links each field (by its property name) with its corresponding <code>FieldEntry</code>
+     * configuration entry.
+     */
+    private Map<String, FieldEntry> formConfigurationsMap = new HashMap<>();
+    /**
      * This map links each hidden field (by its property name) with its value in this form
      */
     private Map<String, Object> formHiddenValuesMap = new HashMap<>();
@@ -53,7 +64,9 @@ public class CustomForm<T> extends FormLayout {
         private Class<?> fieldType;
         private Integer colSpan;
         private ComboBoxConfiguration comboBoxConfiguration;
+        private Double widthPercentage;
         private Field field;
+        private boolean listKeyField;
 
         public boolean equals(Object o) {
             if (o instanceof CustomForm.FieldEntry) {
@@ -103,6 +116,12 @@ public class CustomForm<T> extends FormLayout {
                         field.getAnnotation(org.bastanchu.churierp.churierpback.util.annotation.FormField.class);
                 org.bastanchu.churierp.churierpback.util.annotation.ComboBoxConfiguration comboBoxConfiguration =
                         formFieldAnnotation.comboBoxConfiguration();
+                org.bastanchu.churierp.churierpback.util.annotation.ListField listFieldAnnotation =
+                        field.getAnnotation(org.bastanchu.churierp.churierpback.util.annotation.ListField.class);
+                boolean keyListField = false;
+                if ((listFieldAnnotation != null) && (listFieldAnnotation.keyField())) {
+                    keyListField = true;
+                }
                 if (field.getAnnotation(org.bastanchu.churierp.churierpback.util.annotation.Field.class) != null) {
                     org.bastanchu.churierp.churierpback.util.annotation.Field fieldAnnotation =
                             field.getAnnotation(org.bastanchu.churierp.churierpback.util.annotation.Field.class);
@@ -117,7 +136,8 @@ public class CustomForm<T> extends FormLayout {
                     String labelText = messageSource.getMessage(fieldAnnotation.key(), null, LocaleContextHolder.getLocale());
 
                     Class<?> fieldClass = field.getType();
-                    fieldEntrySet.add(new CustomForm.FieldEntry(bean, formFieldAnnotation, labelText, fieldClass, colSpan, comboBoxConfiguration, field));
+                    fieldEntrySet.add(new CustomForm.FieldEntry(bean, formFieldAnnotation, labelText, fieldClass,
+                            colSpan, comboBoxConfiguration, formFieldAnnotation.widthPercentage(), field, keyListField));
                 }
             } else if (field.getAnnotation(org.bastanchu.churierp.churierpback.util.annotation.HiddenFormField.class) != null) {
                     // Fill initial null value for hidden field
@@ -158,6 +178,7 @@ public class CustomForm<T> extends FormLayout {
             for (CustomForm.FieldEntry fieldEntry:groupSet) {
                 FormLayout.FormItem formItem = addFieldToForm(fieldEntry);
                 setColspan(formItem, fieldEntry.getColSpan());
+                formItem.getStyle().set("max-width", fieldEntry.getWidthPercentage() * fieldEntry.getColSpan() + "%");
                 groupSetSize += fieldEntry.getColSpan();
             }
             if (biggestGroupSize > groupSetSize) {
@@ -196,6 +217,8 @@ public class CustomForm<T> extends FormLayout {
                     new StringFormMapper<>(beanClass, binderValidator, binderReader, validator, formComponentsMap);
             formItem = stringFormMapper.mapFormEntry(this, fieldEntry);
         }
+        formConfigurationsMap.put(fieldEntry.getField().getName(), fieldEntry);
+        formItemsMap.put(fieldEntry.getField().getName(), formItem);
         return formItem;
     }
 
@@ -282,5 +305,35 @@ public class CustomForm<T> extends FormLayout {
             }
             formHiddenValuesMap.put(fieldName, value);
         }
+    }
+
+    /**
+     * Enable form fields excepting for key fields (from @ListField annotation)
+     * @param enabled <code>true</code> if enabling fields (but key fields). <code>false</code> disables all key fields.
+     *
+     * @see org.bastanchu.churierp.churierpback.util.annotation.ListField
+     */
+    public void setEnabledButKeyFields(boolean enabled) {
+        if (enabled) {
+            for (String key : formConfigurationsMap.keySet()) {
+                FieldEntry fieldEntry = formConfigurationsMap.get(key);
+                FormItem item = formItemsMap.get(key);
+                if ((item != null) && !fieldEntry.isListKeyField()) {
+                    item.setEnabled(true);
+                }
+            }
+        } else {
+            for (String key : formConfigurationsMap.keySet()) {
+                FormItem item = formItemsMap.get(key);
+                if ((item != null)) {
+                    item.setEnabled(false);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
     }
 }

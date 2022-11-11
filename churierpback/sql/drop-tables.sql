@@ -1,3 +1,7 @@
+--VAT Data Master model
+drop table VAT_VALUES;
+drop table VAT_TYPES;
+
 --Companies model
 drop sequence SEQ_COMPANIES;
 drop table COMPANIES;

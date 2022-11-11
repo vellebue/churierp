@@ -34,3 +34,11 @@ list:
         children:
           - menuText : "churierpweb.menu.administration.companies.List"
             factoryClassName: "org.bastanchu.churierp.churierpweb.view.administration.companies.ThematicCompaniesView$Factory"
+  - menuText: "churierpweb.menu.Accounting"
+    url: ""
+    children:
+      - menuText: "churierpweb.menu.accounting.Taxes"
+        url: ""
+        children:
+          - menuText: "churierpweb.menu.accounting.taxes.Vat"
+            factoryClassName: "org.bastanchu.churierp.churierpweb.view.accounting.taxes.vat.VatMasterView$Factory"
