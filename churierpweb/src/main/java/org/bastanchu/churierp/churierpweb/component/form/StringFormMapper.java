@@ -16,8 +16,8 @@ import java.util.Map;
 
 class StringFormMapper<T> extends AbstractFormMapper<T> {
 
-    public StringFormMapper(Class<T> beanClass, BeanValidationBinder<T> binderValidator, Binder<T> binderReader, Validator validator, Map<String, Component> formComponentsMap) {
-        super(beanClass, binderValidator, binderReader, validator, formComponentsMap);
+    public StringFormMapper(Class<T> beanClass, BeanValidationBinder<T> binderValidator, Binder<T> binderReader, Validator validator, Map<String, Component> formComponentsMap, boolean forceReadOnly) {
+        super(beanClass, binderValidator, binderReader, validator, formComponentsMap, forceReadOnly);
     }
 
     @Override
@@ -29,7 +29,7 @@ class StringFormMapper<T> extends AbstractFormMapper<T> {
         } else {
             formComponent = new TextField();
         }
-        if (fieldEntry.getFormField().readOnly()) {
+        if (forceReadOnly || fieldEntry.getFormField().readOnly()) {
             formComponent.setReadOnly(true);
         }
         if (field.getAnnotation(NotEmpty.class) != null) {

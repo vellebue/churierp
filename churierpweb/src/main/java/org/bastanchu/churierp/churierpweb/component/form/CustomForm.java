@@ -38,21 +38,16 @@ public class CustomForm<T> extends FormLayout {
      */
     private Map<String, Component> formComponentsMap = new HashMap<>();
     /**
-     * This map links each field (by its property name) with its corresponding logical component
-     * in this form.
-     */
-    private Map<String, FormItem> formItemsMap = new HashMap<>();
-    /**
-     * This map links each field (by its property name) with its corresponding <code>FieldEntry</code>
-     * configuration entry.
-     */
-    private Map<String, FieldEntry> formConfigurationsMap = new HashMap<>();
-    /**
      * This map links each hidden field (by its property name) with its value in this form
      */
     private Map<String, Object> formHiddenValuesMap = new HashMap<>();
     private MessageSource messageSource;
     private VerticalLayout errorsBox = new VerticalLayout();
+    /**
+     * <code>true</code> if key fields annotated with @ListField are read only fields
+     * <code>false</code> otherwise.
+     */
+    private boolean readOnlyKeys;
 
     @Data
     @AllArgsConstructor
@@ -88,6 +83,11 @@ public class CustomForm<T> extends FormLayout {
     }
 
     public CustomForm(T bean, MessageSource messageSource) {
+        this(bean, messageSource, false);
+    }
+
+    public CustomForm(T bean, MessageSource messageSource, boolean readOnlyKeys) {
+        this.readOnlyKeys = readOnlyKeys;
         this.getStyle().set("display","block");
         this.getStyle().set("margin-left","auto");
         this.getStyle().set("margin-right","auto");
@@ -195,36 +195,49 @@ public class CustomForm<T> extends FormLayout {
     private FormLayout.FormItem addFieldToForm(CustomForm.FieldEntry fieldEntry) {
         Class<?> fieldType = fieldEntry.getFieldType();
         FormLayout.FormItem formItem = null;
+        boolean forceReadOnly = fieldEntry.listKeyField && readOnlyKeys;
         if (!fieldEntry.comboBoxConfiguration.mapFieldName().equals("")) {
             //Combo Box
             ComboBoxFormMapper<T> comboBoxFormMapper =
-                    new ComboBoxFormMapper<>(beanClass, binderValidator, binderReader, validator, formComponentsMap);
+                    new ComboBoxFormMapper<>(beanClass, binderValidator, binderReader,
+                            validator, formComponentsMap, forceReadOnly);
             formItem = comboBoxFormMapper.mapFormEntry(this, fieldEntry);
         }
         else if (Date.class.isAssignableFrom(fieldType)) {
             // Date Picker
             DateFormMapper<T> dateFormMapper =
-                    new DateFormMapper<>(beanClass, binderValidator, binderReader, validator, formComponentsMap);
+                    new DateFormMapper<>(beanClass, binderValidator, binderReader,
+                            validator, formComponentsMap, forceReadOnly);
             formItem = dateFormMapper.mapFormEntry(this, fieldEntry);
         } else if (Integer.class.isAssignableFrom(fieldType)) {
             // Number Text Field
             IntegerFormMapper<T> integerFormMapper =
-                    new IntegerFormMapper<>(beanClass, binderValidator, binderReader,validator, formComponentsMap);
+                    new IntegerFormMapper<>(beanClass, binderValidator, binderReader,
+                            validator, formComponentsMap, forceReadOnly);
             formItem = integerFormMapper.mapFormEntry(this, fieldEntry);
         } else {
             // Generic Text Field
             StringFormMapper<T> stringFormMapper =
-                    new StringFormMapper<>(beanClass, binderValidator, binderReader, validator, formComponentsMap);
+                    new StringFormMapper<>(beanClass, binderValidator, binderReader,
+                            validator, formComponentsMap, forceReadOnly);
             formItem = stringFormMapper.mapFormEntry(this, fieldEntry);
         }
-        formConfigurationsMap.put(fieldEntry.getField().getName(), fieldEntry);
-        formItemsMap.put(fieldEntry.getField().getName(), formItem);
+
         return formItem;
     }
 
     public void addErrorMessageKey(String errorMessageKey, Object[] parameters) {
         String errorMessage = messageSource.getMessage(errorMessageKey, parameters, LocaleContextHolder.getLocale());
         Label label = new Label(errorMessage);
+        label.getStyle().set("color", "red");
+        label.getStyle().set("font-size", "10pt");
+        label.getStyle().set("width", "100%");
+        label.getStyle().set("margin-top", "0px");
+        errorsBox.add(label);
+    }
+
+    public void addErrorMessageText(String errorMessageText) {
+        Label label = new Label(errorMessageText);
         label.getStyle().set("color", "red");
         label.getStyle().set("font-size", "10pt");
         label.getStyle().set("width", "100%");
@@ -304,31 +317,6 @@ public class CustomForm<T> extends FormLayout {
                 e.printStackTrace();
             }
             formHiddenValuesMap.put(fieldName, value);
-        }
-    }
-
-    /**
-     * Enable form fields excepting for key fields (from @ListField annotation)
-     * @param enabled <code>true</code> if enabling fields (but key fields). <code>false</code> disables all key fields.
-     *
-     * @see org.bastanchu.churierp.churierpback.util.annotation.ListField
-     */
-    public void setEnabledButKeyFields(boolean enabled) {
-        if (enabled) {
-            for (String key : formConfigurationsMap.keySet()) {
-                FieldEntry fieldEntry = formConfigurationsMap.get(key);
-                FormItem item = formItemsMap.get(key);
-                if ((item != null) && !fieldEntry.isListKeyField()) {
-                    item.setEnabled(true);
-                }
-            }
-        } else {
-            for (String key : formConfigurationsMap.keySet()) {
-                FormItem item = formItemsMap.get(key);
-                if ((item != null)) {
-                    item.setEnabled(false);
-                }
-            }
         }
     }
 

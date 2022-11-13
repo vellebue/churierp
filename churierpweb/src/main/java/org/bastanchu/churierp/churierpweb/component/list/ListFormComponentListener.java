@@ -9,10 +9,10 @@ public interface ListFormComponentListener<T extends Reseteable & Copiable<T>> {
 
     public List<T> onLoadItems();
 
-    public boolean onInsertItem(T item);
+    public List<String> onInsertItem(T item);
 
-    public boolean onUpdateItem(T item);
+    public List<String> onUpdateItem(T item);
 
-    public boolean onDeleteItem(T item);
+    public List<String> onDeleteItem(T item);
 
 }

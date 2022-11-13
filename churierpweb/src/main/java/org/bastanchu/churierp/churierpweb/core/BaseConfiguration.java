@@ -48,6 +48,7 @@ import java.util.Properties;
         "org.bastanchu.churierp.churierpweb.view",
         "org.bastanchu.churierp.churierpback.dao.**.impl",
         "org.bastanchu.churierp.churierpback.service.**.impl",
+        "org.bastanchu.churierp.churierpback.service",
         //"org.bastanchu.churierp.churierpback.service.administration.impl",
         "org.bastanchu.churierp.churierpweb.controller"
 })

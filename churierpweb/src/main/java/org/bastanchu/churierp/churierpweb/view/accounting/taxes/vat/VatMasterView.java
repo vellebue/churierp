@@ -1,6 +1,7 @@
 package org.bastanchu.churierp.churierpweb.view.accounting.taxes.vat;
 
 import org.bastanchu.churierp.churierpback.dto.accounting.taxes.VatTypeDto;
+import org.bastanchu.churierp.churierpback.service.accounting.taxes.VatService;
 import org.bastanchu.churierp.churierpback.service.administration.CountryService;
 import org.bastanchu.churierp.churierpweb.component.list.ListFormComponent;
 import org.bastanchu.churierp.churierpweb.component.list.ListFormComponentListener;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.i18n.LocaleContextHolder;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +21,8 @@ public class VatMasterView extends BodyView {
     private ListFormComponent<VatTypeDto> vatTypesListFormComponent = null;
     @Autowired
     private CountryService countryService;
+    @Autowired
+    private VatService vatService;
 
     public static class Factory extends BodyViewFactory  {
 
@@ -46,6 +51,7 @@ public class VatMasterView extends BodyView {
         vatTypesListFormComponent = new ListFormComponent<>(vatTypeDtoReferenceInstance, getMessageSource());
         vatTypesListFormComponent.setWidthPercentage(80.0);
         vatTypesListFormComponent.setListener(new VatTypeListener());
+        vatTypesListFormComponent.loadItems();
         add(vatTypesListFormComponent);
     }
 
@@ -58,22 +64,52 @@ public class VatMasterView extends BodyView {
 
         @Override
         public List<VatTypeDto> onLoadItems() {
-            return null;
+            List<VatTypeDto> vatTypes = vatService.getVatTypes();
+            Map<String, String> countriesMap = countryService.getCountriesMap(LocaleContextHolder.getLocale());
+            vatTypes.forEach(it -> {
+                it.setCountriesMap(countriesMap);
+            });
+            return vatTypes;
         }
 
         @Override
-        public boolean onInsertItem(VatTypeDto item) {
-            return true;
+        public List<String> onInsertItem(VatTypeDto item) {
+            VatTypeDto vatTypeDto = vatService.getVatType(item.getCountryId(), item.getVatId());
+            if (vatTypeDto == null) {
+                vatService.createVatType(item);
+                return null;
+            } else {
+                String message = getMessageSource().getMessage("churierpweb.accounting.taxes.vattype.dto.validation.create",
+                        new Object[]{item.getCountryId(), item.getVatId()},
+                        LocaleContextHolder.getLocale());
+                return Arrays.asList(message);
+            }
         }
 
         @Override
-        public boolean onUpdateItem(VatTypeDto item) {
-            return true;
+        public List<String> onUpdateItem(VatTypeDto item) {
+            VatTypeDto vatTypeDto = vatService.getVatType(item.getCountryId(), item.getVatId());
+            if (vatTypeDto != null) {
+                vatService.updateVatType(item);
+                return null;
+            } else {
+                String message = getMessageSource().getMessage("churierpweb.accounting.taxes.vattype.dto.validation.notexists",
+                        new Object[]{item.getCountryId(), item.getVatId()},
+                        LocaleContextHolder.getLocale());
+                return Arrays.asList(message);
+            }
         }
 
         @Override
-        public boolean onDeleteItem(VatTypeDto item) {
-            return true;
-        }
+        public List<String> onDeleteItem(VatTypeDto item) { VatTypeDto vatTypeDto = vatService.getVatType(item.getCountryId(), item.getVatId());
+            if (vatTypeDto != null) {
+                vatService.deleteVatType(item.getCountryId(), item.getVatId());
+                return null;
+            } else {
+                String message = getMessageSource().getMessage("churierpweb.accounting.taxes.vattype.dto.validation.notexists",
+                        new Object[]{item.getCountryId(), item.getVatId()},
+                        LocaleContextHolder.getLocale());
+                return Arrays.asList(message);
+            }}
     }
 }

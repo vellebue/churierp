@@ -23,17 +23,20 @@ abstract class AbstractFormMapper<T> {
     protected Binder<T> binderReader;
     protected Validator validator;
     protected Map<String, Component> formComponentsMap;
+    protected boolean forceReadOnly;
 
     public AbstractFormMapper(Class<T> beanClass,
                               BeanValidationBinder<T> binderValidator,
                               Binder<T>binderReader,
                               Validator validator,
-                              Map<String, Component> formComponentsMap) {
+                              Map<String, Component> formComponentsMap,
+                              boolean forceReadOnly) {
         this.beanClass = beanClass;
         this.binderValidator = binderValidator;
         this.binderReader = binderReader;
         this.validator = validator;
         this.formComponentsMap = formComponentsMap;
+        this.forceReadOnly = forceReadOnly;
     }
 
     public abstract FormLayout.FormItem mapFormEntry(CustomForm form, CustomForm.FieldEntry fieldEntry);

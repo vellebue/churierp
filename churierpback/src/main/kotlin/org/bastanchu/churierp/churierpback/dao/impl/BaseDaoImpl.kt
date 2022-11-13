@@ -174,11 +174,24 @@ open class BaseDaoImpl<K,E> (open val entityManager: EntityManager)  : BaseDao<K
                 return keyValue as K;
             } else {
                 // TODO Multiple key value
-                return null;
+                return buildKeyObject(keyDeclaredFields.toTypedArray(), entity);
             }
         } else {
             return null;
         }
+    }
+
+    private fun buildKeyObject(keyFields : Array<Field> , entity : E) : K {
+        val keyTypesArray = keyFields.map { it.type }.toTypedArray()
+        val values = ArrayList<Any>()
+        for (keyField in keyFields) {
+            keyField.trySetAccessible()
+            val value = keyField.get(entity)
+            values.add(value)
+        }
+        val keyConstructor = keyClassTypeClass!!.getDeclaredConstructor(*keyTypesArray)
+        val valuesArray = values.toTypedArray()
+        return keyConstructor.newInstance(*valuesArray)
     }
 
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)

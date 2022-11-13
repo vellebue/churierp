@@ -54,7 +54,7 @@ open abstract class BaseDtoDaoImpl<K, E, D> (override val entityManager: EntityM
                 return targetEntity;
             } else {
                 //copyUtils.copyValues(dto as Any, candidateEntity as Any);
-                fromDtoToEntity(dto, targetEntity)
+                //fromDtoToEntity(dto, targetEntity)
                 return candidateEntity;
             }
         } else {

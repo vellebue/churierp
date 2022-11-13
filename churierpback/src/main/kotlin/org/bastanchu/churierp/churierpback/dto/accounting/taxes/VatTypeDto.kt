@@ -8,12 +8,15 @@ import org.bastanchu.churierp.churierpback.util.annotation.ListField
 import org.hibernate.validator.constraints.NotEmpty
 import javax.validation.constraints.Size
 import org.bastanchu.churierp.churierpback.dto.Copiable
+import org.springframework.context.ApplicationContext
 
 class VatTypeDto : Reseteable, Copiable<VatTypeDto> {
 
+    var appContext : ApplicationContext? = null
+
     @NotEmpty
     @Size(max = 2)
-    @Field(key = "churierpweb.accounting.taxes.vat.dto.field.countryId")
+    @Field(key = "churierpweb.accounting.taxes.vattype.dto.field.countryId")
     @FormField(groupId = 0, indexInGroup = 0, widthPercentage = 30.3,
                comboBoxConfiguration = ComboBoxConfiguration(mapFieldName = "countriesMap")
     )
@@ -24,14 +27,14 @@ class VatTypeDto : Reseteable, Copiable<VatTypeDto> {
 
     @NotEmpty
     @Size(max = 2)
-    @Field(key = "churierpweb.accounting.taxes.vat.dto.field.vatId")
+    @Field(key = "churierpweb.accounting.taxes.vattype.dto.field.vatId")
     @FormField(groupId = 0, indexInGroup = 1, widthPercentage = 30.3)
     @ListField(keyField = true)
     var vatId : String? = null;
 
     @NotEmpty
     @Size(max = 256)
-    @Field(key = "churierpweb.accounting.taxes.vat.dto.field.description")
+    @Field(key = "churierpweb.accounting.taxes.vattype.dto.field.description")
     @FormField(groupId = 0, indexInGroup = 2, widthPercentage = 30.3)
     @ListField
     var description : String? = null;

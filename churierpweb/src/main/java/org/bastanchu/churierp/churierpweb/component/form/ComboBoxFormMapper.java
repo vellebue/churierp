@@ -28,8 +28,8 @@ public class ComboBoxFormMapper<T> extends AbstractFormMapper<T> {
 
     }
 
-    public ComboBoxFormMapper(Class<T> beanClass, BeanValidationBinder<T> binderValidator, Binder<T> binderReader, Validator validator, Map<String, Component> formComponentsMap) {
-        super(beanClass, binderValidator, binderReader, validator, formComponentsMap);
+    public ComboBoxFormMapper(Class<T> beanClass, BeanValidationBinder<T> binderValidator, Binder<T> binderReader, Validator validator, Map<String, Component> formComponentsMap, boolean forceReadOnly) {
+        super(beanClass, binderValidator, binderReader, validator, formComponentsMap, forceReadOnly);
     }
 
     @Override
@@ -45,6 +45,9 @@ public class ComboBoxFormMapper<T> extends AbstractFormMapper<T> {
             formComponent.getStyle().set("border-left-color","#FF0000");
         }
         formComponent.getStyle().set("width","100%");
+        if (forceReadOnly || fieldEntry.getFormField().readOnly()) {
+            formComponent.setReadOnly(true);
+        }
         FormLayout.FormItem formComponentContainer = form.addFormItem(formComponent, fieldEntry.getFieldLabel());
         binderReader.forField(formComponent)
                 .bind(e -> {

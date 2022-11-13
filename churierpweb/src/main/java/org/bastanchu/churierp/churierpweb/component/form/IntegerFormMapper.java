@@ -14,8 +14,8 @@ import java.util.Map;
 
 class IntegerFormMapper<T> extends AbstractFormMapper<T> {
 
-    public IntegerFormMapper(Class<T> beanClass, BeanValidationBinder<T> binderValidator, Binder<T> binderReader, Validator validator, Map<String, Component> formComponentsMap) {
-        super(beanClass, binderValidator, binderReader, validator, formComponentsMap);
+    public IntegerFormMapper(Class<T> beanClass, BeanValidationBinder<T> binderValidator, Binder<T> binderReader, Validator validator, Map<String, Component> formComponentsMap, boolean forceReadOnly) {
+        super(beanClass, binderValidator, binderReader, validator, formComponentsMap, forceReadOnly);
     }
 
     @Override
@@ -30,7 +30,9 @@ class IntegerFormMapper<T> extends AbstractFormMapper<T> {
             formComponent.getStyle().set("border-left-width","thick");
             formComponent.getStyle().set("border-left-color","#FF0000");
         }
-        //formComponent.getStyle().set("width","100%");
+        if (forceReadOnly || fieldEntry.getFormField().readOnly()) {
+            formComponent.setReadOnly(true);
+        }
         FormLayout.FormItem formComponentContainer = form.addFormItem(formComponent, fieldEntry.getFieldLabel());
         binderReader.forField(formComponent)
                 .bind(e -> {
