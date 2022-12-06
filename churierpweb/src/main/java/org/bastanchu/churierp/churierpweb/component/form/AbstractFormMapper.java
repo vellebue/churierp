@@ -5,6 +5,8 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -17,6 +19,8 @@ import java.util.Map;
 import java.util.Set;
 
 abstract class AbstractFormMapper<T> {
+
+    private static Logger logger = LoggerFactory.getLogger(AbstractFormMapper.class);
 
     protected Class<T> beanClass;
     protected BeanValidationBinder<T> binderValidator;
@@ -85,8 +89,10 @@ abstract class AbstractFormMapper<T> {
             }
         } catch (ValidationException e) {
             // TODO add logger trace
+            logger.error("Validation Exception", e);
         } catch (Exception e) {
             // TODO add logger trace if constructor fails newInstance
+            logger.error("Generic Exception", e);
         }
         return validationResult;
     }

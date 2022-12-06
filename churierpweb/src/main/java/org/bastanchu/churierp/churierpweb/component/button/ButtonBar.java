@@ -2,6 +2,8 @@ package org.bastanchu.churierp.churierpweb.component.button;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 public class ButtonBar extends HorizontalLayout {
@@ -18,6 +20,12 @@ public class ButtonBar extends HorizontalLayout {
     }
 
     public void addButton(Button button) {
+        if (divContainer.getChildren().count() > 0) {
+            Span paddingDiv = new Span("##");
+            paddingDiv.getStyle().set("min-width", "25pt");
+            paddingDiv.getStyle().set("color", "#FFFFFF");
+            divContainer.add(paddingDiv);
+        }
         divContainer.add(button);
     }
 

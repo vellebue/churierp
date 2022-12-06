@@ -23,6 +23,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.*;
 
 public class CustomForm<T> extends FormLayout {
@@ -184,12 +185,29 @@ public class CustomForm<T> extends FormLayout {
             if (biggestGroupSize > groupSetSize) {
                 Integer diff = biggestGroupSize - groupSetSize;
                 for (int i = 0 ; i < diff ; i++) {
-                    addFormItem(new Div(), "");
+                    //Div remainingDiv = new Div();
+                    //remainingDiv.getStyle().set("width", diff * getRemainingGroupSize(groupSet) + "%");
+                    FormItem emptyFormItem = addFormItem(new Div(), "");
+                    emptyFormItem.getStyle().set("max-width", diff * getRemainingGroupSize(groupSet) + "%");
                 }
             }
         }
         // Finally add lower errors box
         add(errorsBox, biggestGroupSize * 2);
+    }
+
+    private double getRemainingGroupSize(Set<CustomForm.FieldEntry> groupSet) {
+        double groupSize = 0.0;
+        for (CustomForm.FieldEntry it : groupSet) {
+            groupSize += it.getWidthPercentage() * it.getColSpan();
+        }
+        if (groupSize < 100.0) {
+            double remainingSize = 100.0 - groupSize;
+            remainingSize = remainingSize - 0.1 * remainingSize;
+            return remainingSize;
+        } else {
+            return 0.0;
+        }
     }
 
     private FormLayout.FormItem addFieldToForm(CustomForm.FieldEntry fieldEntry) {
@@ -215,6 +233,12 @@ public class CustomForm<T> extends FormLayout {
                     new IntegerFormMapper<>(beanClass, binderValidator, binderReader,
                             validator, formComponentsMap, forceReadOnly);
             formItem = integerFormMapper.mapFormEntry(this, fieldEntry);
+        } else if(BigDecimal.class.isAssignableFrom(fieldType)) {
+            // BigDecimal field
+            BigDecimalFormMapper<T> bigDecimalFormMapper =
+                    new BigDecimalFormMapper<>(beanClass, binderValidator, binderReader,
+                            validator, formComponentsMap, forceReadOnly);
+            formItem = bigDecimalFormMapper.mapFormEntry(this, fieldEntry);
         } else {
             // Generic Text Field
             StringFormMapper<T> stringFormMapper =

@@ -5,7 +5,6 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.bastanchu.churierp.churierpback.dto.Copiable;
 import org.bastanchu.churierp.churierpback.dto.Reseteable;
-import org.bastanchu.churierp.churierpback.dto.administration.users.UserDto;
 import org.bastanchu.churierp.churierpback.util.CopyUtil;
 import org.bastanchu.churierp.churierpback.util.ListKey;
 import org.bastanchu.churierp.churierpweb.component.button.BlueButton;
@@ -13,7 +12,6 @@ import org.bastanchu.churierp.churierpweb.component.button.ButtonBar;
 import org.bastanchu.churierp.churierpweb.component.button.GreenButton;
 import org.bastanchu.churierp.churierpweb.component.button.RedButton;
 import org.bastanchu.churierp.churierpweb.component.form.CustomForm;
-import org.bastanchu.churierp.churierpweb.component.view.listener.ThematicBodySingleItemViewListener;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 

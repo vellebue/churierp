@@ -6,7 +6,7 @@ import org.bastanchu.churierp.churierpback.util.CopyUtil
 import java.lang.RuntimeException
 import java.lang.reflect.ParameterizedType
 import javax.persistence.EntityManager
-import kotlin.streams.toList
+import java.util.stream.Collectors
 
 open abstract class BaseDtoDaoImpl<K, E, D> (override val entityManager: EntityManager) : BaseDaoImpl<K, E>(entityManager), BaseDtoDao<K, E, D> {
 
@@ -31,7 +31,7 @@ open abstract class BaseDtoDaoImpl<K, E, D> (override val entityManager: EntityM
     }
 
     final override fun toDataTransferObjectList(entityList: List<E>): List<D> {
-        return entityList.stream().map { toDataTransferObject(it) }.toList()
+        return entityList.stream().map { toDataTransferObject(it) }.collect(Collectors.toList())
     }
 
     override fun toDataTransferObject(entity: E, dto: D) {

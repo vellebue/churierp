@@ -17,7 +17,9 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.vaadin.klaudeta.PaginatedGrid;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -130,6 +132,7 @@ public class PagedTableComponent<T> extends VerticalLayout
     private void configureGridColumns() {
         DateFormat dateFormat = new SimpleDateFormat(
                 messageSource.getMessage("churierpweb.dateFormat", null, LocaleContextHolder.getLocale()));
+        NumberFormat numberFormat = NumberFormat.getInstance(LocaleContextHolder.getLocale());
         //Field[] fields = modelClass.getDeclaredFields();
         //initDisplayableAvailableFields(fields);
         for(Field aField: displayableFields) {
@@ -142,7 +145,11 @@ public class PagedTableComponent<T> extends VerticalLayout
                         Date dateValue = (Date) value;
                         String formattedValue = dateFormat.format(dateValue);
                         return formattedValue;
-                    } else {
+                    } if (value instanceof java.math.BigDecimal) {
+                        BigDecimal numberValue = (BigDecimal) value;
+                        String formattedValue = numberFormat.format(numberValue);
+                        return formattedValue;
+                    }  else {
                         return value;
                     }
                 } catch (IllegalAccessException ex) {

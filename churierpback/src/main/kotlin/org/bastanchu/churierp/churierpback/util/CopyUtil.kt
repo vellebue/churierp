@@ -1,13 +1,15 @@
 package org.bastanchu.churierp.churierpback.util
 
 import java.lang.reflect.Field
+import java.math.BigDecimal
 import java.util.*
 
 class CopyUtil {
 
     companion object Instance {
 
-        val COPIABLE_TYPES: Array<Class<*>> = arrayOf(Integer::class.java, String::class.java, Date::class.java);
+        val COPIABLE_TYPES: Array<Class<*>> = arrayOf(Integer::class.java, String::class.java,
+                                                      Date::class.java, BigDecimal::class.java);
         var COMPARATORS = HashMap<Class<out Any>, Comparator<out Any>>();
 
         init {
