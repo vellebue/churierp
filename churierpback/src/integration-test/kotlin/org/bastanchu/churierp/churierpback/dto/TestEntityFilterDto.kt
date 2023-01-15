@@ -3,6 +3,7 @@ package org.bastanchu.churierp.churierpback.dto
 import org.bastanchu.churierp.churierpback.util.annotation.FormField
 import java.util.*
 
+@Deprecated("New Test structure developed")
 class TestEntityFilterDto {
 
     @FormField(groupId = 0, indexInGroup = 0)

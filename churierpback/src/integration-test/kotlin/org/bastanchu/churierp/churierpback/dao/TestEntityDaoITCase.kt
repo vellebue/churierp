@@ -21,9 +21,10 @@ import javax.persistence.EntityManager
 import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
 
-@ExtendWith(value = [SpringExtension::class])
-@ContextConfiguration(classes = [ApplicationContextConfiguration::class])
-@Tag("integrationTest")
+//@ExtendWith(value = [SpringExtension::class])
+//@ContextConfiguration(classes = [ApplicationContextConfiguration::class])
+//@Tag("integrationTest")
+@Deprecated("New Test structure developed")
 class TestEntityDaoITCase {
 
     @Autowired
@@ -41,7 +42,7 @@ class TestEntityDaoITCase {
 
     // QUERY TESTS
 
-    @Test
+    //@Test
     fun shouldGetAnExistingEntityProperly() {
         assertNotNull(testEntityDao, "TestEntityDao must be created and injected")
         if (testEntityDao != null) {
@@ -55,7 +56,7 @@ class TestEntityDaoITCase {
         }
     }
 
-    @Test
+    //@Test
     fun shouldPerformAFilterQueryProperly() {
         assertNotNull(testEntityDao, "TestEntityDao must be created and injected")
         if (testEntityDao != null) {
@@ -73,7 +74,7 @@ class TestEntityDaoITCase {
         }
     }
 
-    @Test
+    //@Test
     fun shouldPerformListAllEntitiesProperly() {
         assertNotNull(testEntityDao, "TestEntityDao must be created and injected")
         if (testEntityDao != null) {
@@ -94,7 +95,7 @@ class TestEntityDaoITCase {
         }
     }
 
-    @Test
+    //@Test
     fun shouldPerformAGenericFilterProperly() {
         assertNotNull(testEntityDao, "TestEntityDao must be created and injected")
         if (testEntityDao != null) {
@@ -115,7 +116,7 @@ class TestEntityDaoITCase {
 
     // CONVERSION DTO ENTITY
 
-    @Test
+    //@Test
     fun shouldConvertFromEntityToDtoSingleArgument() {
         assertNotNull(testEntityDao, "TestEntityDao must be created and injected")
         if (testEntityDao != null) {
@@ -130,7 +131,7 @@ class TestEntityDaoITCase {
         }
     }
 
-    @Test
+    //@Test
     fun shouldConvertFromEntityToDtoTwoArguments() {
         assertNotNull(testEntityDao, "TestEntityDao must be created and injected")
         if (testEntityDao != null) {
@@ -146,7 +147,7 @@ class TestEntityDaoITCase {
         }
     }
 
-    @Test
+    //@Test
     fun shouldPerformDtoToEntitySingleArgumentPersitedEntity() {
         assertNotNull(testEntityDao, "TestEntityDao must be created and injected")
         if (testEntityDao != null) {
@@ -192,7 +193,7 @@ class TestEntityDaoITCase {
         }
     }
 
-    @Test
+    //@Test
     fun shouldPerformDtoToEntitySingleArgumentNonPersitedEntity() {
         assertNotNull(testEntityDao, "TestEntityDao must be created and injected")
         if (testEntityDao != null) {
@@ -211,7 +212,7 @@ class TestEntityDaoITCase {
         }
     }
 
-    @Test
+    //@Test
     fun shouldPerformDtoToEntitySingleArgumentNonIdentifiedEntity() {
         assertNotNull(testEntityDao, "TestEntityDao must be created and injected")
         if (testEntityDao != null) {
@@ -231,7 +232,7 @@ class TestEntityDaoITCase {
         }
     }
 
-    @Test
+    //@Test
     fun shouldPerformDtoToEntityDoubleArgumentCorrectly() {
         assertNotNull(testEntityDao, "TestEntityDao must be created and injected")
         if (testEntityDao != null) {
@@ -251,7 +252,7 @@ class TestEntityDaoITCase {
 
     // DATA MANIPULATION TESTS
 
-    @Test
+    //@Test
     fun shouldPerformAnInsertProperly() {
         assertNotNull(testEntityDao, "TestEntityDao must be created and injected")
         if (testEntityDao != null) {

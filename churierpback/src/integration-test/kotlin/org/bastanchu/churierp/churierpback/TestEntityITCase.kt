@@ -9,15 +9,16 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import javax.sql.DataSource
 
-@ExtendWith(value = [SpringExtension::class])
-@ContextConfiguration(classes = [ApplicationContextConfiguration::class])
-@Tag("integrationTest")
+//@ExtendWith(value = [SpringExtension::class])
+//@ContextConfiguration(classes = [ApplicationContextConfiguration::class])
+//@Tag("integrationTest")
+@Deprecated("New Test structure developed")
 class TestEntityITCase {
 
-    @Autowired
+    //@Autowired
     val dataSource:DataSource? = null
 
-    @Test
+    //@Test
     fun shouldPerformAnEntityTestProperly() {
         assertTrue(true)
     }

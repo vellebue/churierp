@@ -10,6 +10,7 @@ import javax.persistence.EntityManager
 import javax.persistence.PersistenceContext
 
 @Repository
+@Deprecated("New Test structure developed")
 @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
 class TestEntityDaoImpl(@PersistenceContext(unitName = "entityManagerFactory") override val entityManager: EntityManager)
     : BaseDtoDaoImpl<Integer, TestEntity, TestEntityDto>(entityManager) , TestEntityDao {

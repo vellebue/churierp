@@ -1,5 +1,6 @@
 package org.bastanchu.churierp.churierpback
 
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.*
 import org.springframework.core.env.Environment
@@ -15,39 +16,46 @@ import java.beans.PropertyVetoException
 import java.util.*
 import javax.sql.DataSource
 
+/**
+ * Mirar las siguientes URLs:
+ * https://www.baeldung.com/spring-boot-testcontainers-integration-test
+ * https://www.testcontainers.org/test_framework_integration/junit_5/
+ */
 @Configuration
-@ComponentScan(basePackages = ["org.bastanchu.churierp.churierpback.dao.impl",
-                               "org.bastanchu.churierp.churierpback.dao.impl.administration.users",
-                               "org.bastanchu.churierp.churierpback.service.impl"])
-@EnableJpaRepositories
+@ComponentScan( basePackages = ["org.bastanchu.churierp.churierpback.**"])
+@EnableJpaRepositories()
 @PropertySource("classpath:test-application.properties")
 @EnableTransactionManagement(mode = AdviceMode.PROXY)
-open class ApplicationContextConfiguration {
+open class ApplicationContextConfiguration(@Autowired val environment: Environment) {
 
-    @Autowired
-    private val env: Environment? = null
+    val logger = LoggerFactory.getLogger(ApplicationContextConfiguration::class.java)
+
+    init {
+        logger.info("Starting ApplicationContextConfiguration")
+    }
 
     @Bean(name = ["dataSource"])
-    open fun dataSource(): DataSource {
+    open fun dataSource() : DataSource {
+        logger.info("Starting Test Datasource")
         val dataSource = DriverManagerDataSource()
-        dataSource.setDriverClassName(env?.getProperty("jdbc.churierpweb.driver"))
-        dataSource.url = env?.getProperty("jdbc.churierpweb.url")
-        dataSource.username = env?.getProperty("jdbc.churierpweb.username")
-        dataSource.password = env?.getProperty("jdbc.churierpweb.password")
+        dataSource.setDriverClassName("org.postgresql.Driver")
+        dataSource.url =  environment.getProperty("spring.datasource.url")// containerInstance.jdbcUrl
+        dataSource.username = environment.getProperty("spring.datasource.username") //containerInstance.username
+        dataSource.password = environment.getProperty("spring.datasource.password")//containerInstance.password
         return dataSource
     }
 
     @Bean(name = ["entityManagerFactory"])
     @Primary
     @Throws(PropertyVetoException::class)
-    open fun entityManagerFactoryBean(@Autowired dataSource: DataSource?): LocalContainerEntityManagerFactoryBean? {
+    open fun entityManagerFactoryBean(@Autowired dataSource: DataSource): LocalContainerEntityManagerFactoryBean? {
         val em = LocalContainerEntityManagerFactoryBean()
         em.dataSource = dataSource
-        em.setPackagesToScan(*arrayOf("org.bastanchu.churierp.churierpback.entity"))
+        em.setPackagesToScan("org.bastanchu.churierp.churierpback.entity.accounting.taxes")
         val vendorAdapter: JpaVendorAdapter = HibernateJpaVendorAdapter()
         em.jpaVendorAdapter = vendorAdapter
         val properties = Properties()
-        properties.setProperty("hibernate.dialect", env!!.getProperty("hibernate.churierpweb.dialect"))
+        properties.setProperty("hibernate.dialect", environment.getProperty("hibernate.churierpweb.dialect"))
         properties.setProperty("hibernate.temp.use_jdbc_metadata_defaults", "false")
         em.setJpaProperties(properties)
         return em
@@ -60,4 +68,5 @@ open class ApplicationContextConfiguration {
         transactionManager.entityManagerFactory = entityManagerFactory.getObject()
         return transactionManager
     }
+
 }

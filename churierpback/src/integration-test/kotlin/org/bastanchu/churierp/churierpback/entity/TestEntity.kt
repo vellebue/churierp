@@ -3,8 +3,9 @@ package org.bastanchu.churierp.churierpback.entity
 import java.util.*
 import javax.persistence.*
 
-@Entity
-@Table(name = "TEST_ENTITIES")
+//@Entity
+//@Table(name = "TEST_ENTITIES")
+@Deprecated("New Test structure developed")
 class TestEntity {
 
     @Id
