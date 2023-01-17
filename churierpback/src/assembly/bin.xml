@@ -8,7 +8,7 @@
     <fileSets>
         <fileSet>
             <includes>
-                <include>target/site/jacoco/**</include>
+                <include>target/site/jacoco-merged-test-coverage-report/**</include>
             </includes>
             <fileMode>0755</fileMode>
         </fileSet>
