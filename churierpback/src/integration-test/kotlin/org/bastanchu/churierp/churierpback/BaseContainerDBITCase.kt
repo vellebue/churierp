@@ -4,7 +4,12 @@ import com.github.dockerjava.api.model.ExposedPort
 import com.github.dockerjava.api.model.HostConfig
 import com.github.dockerjava.api.model.PortBinding
 import com.github.dockerjava.api.model.Ports
+import org.bastanchu.churierp.churierpback.dao.administration.companies.CountriesDao
+import org.bastanchu.churierp.churierpback.dao.administration.companies.RegionsDao
+import org.bastanchu.churierp.churierpback.service.FormatContextHolder
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.runner.RunWith
 import org.slf4j.LoggerFactory
@@ -35,6 +40,10 @@ import javax.sql.DataSource
     initializers = [BaseContainerDBITCase.Companion.Initializer::class],
                       value = "classpath:test-context.xml")
 @Testcontainers
+/*
+ * Recipe to ensure something is executed before all tests in this class
+ * https://stackoverflow.com/questions/43282798/in-junit-5-how-to-run-code-before-all-tests
+ */
 abstract class BaseContainerDBITCase {
 
     val logger = LoggerFactory.getLogger(BaseContainerDBITCase::class.java)
@@ -44,13 +53,19 @@ abstract class BaseContainerDBITCase {
     //@Lazy
     @Autowired
     protected var dataSource : DataSource? = null
-
-    var postgresqlContainerLoaded = false;
+    /*
+    @Autowired
+    private var countriesDao : CountriesDao? = null
+    @Autowired
+    private var regionsDao : RegionsDao? = null
+     */
 
     companion object {
 
         val logger = LoggerFactory.getLogger(Companion::class.java)
         var  currentExposedPort = 40000
+        //var postgresqlContainerLoaded = false;
+        var postgresqlContainerClassLoadedVector = Vector<Class<in BaseContainerDBITCase>>()
 
         @Container
         @JvmField
@@ -135,13 +150,23 @@ abstract class BaseContainerDBITCase {
 
     @BeforeEach
     public fun loadPostgresqlContainer() {
-        if (!postgresqlContainerLoaded) {
-            if (!getScriptContent().trim().equals("")) {
-                logger.info("Executing script content")
-                executePostgresqlScript(getScriptContent())
-                logger.info("Script content executed")
+        println("Attemp to load script content")
+        logger.warn("Attemp to load script content")
+        synchronized(postgresqlContainerClassLoadedVector) {
+            if (!postgresqlContainerClassLoadedVector.contains(this.javaClass)) {
+                println("Executing script content")
+                if (!getScriptContent().trim().equals("")) {
+                    logger.warn("Executing script content")
+                    executePostgresqlScript(getScriptContent())
+                    logger.warn("Script content executed")
+                } else {
+                    println("This is an empty script")
+                }
+                postgresqlContainerClassLoadedVector.add(this.javaClass)
+                println("Added class to vector")
+            } else {
+                logger.warn("DB Script already loaded")
             }
-            postgresqlContainerLoaded = true;
         }
     }
 
@@ -149,7 +174,8 @@ abstract class BaseContainerDBITCase {
         val conn = dataSource!!.connection
         conn.use {
             val callableStatement = it.prepareCall(script)
-            logger. info("Executing test script content")
+            println("Executing script\n ${script}\n")
+            logger. warn("Executing test script content")
             callableStatement.use {
                 it.execute()
             }

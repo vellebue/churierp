@@ -51,7 +51,8 @@ open class ApplicationContextConfiguration(@Autowired val environment: Environme
     open fun entityManagerFactoryBean(@Autowired dataSource: DataSource): LocalContainerEntityManagerFactoryBean? {
         val em = LocalContainerEntityManagerFactoryBean()
         em.dataSource = dataSource
-        em.setPackagesToScan("org.bastanchu.churierp.churierpback.entity.accounting.taxes")
+        //em.setPackagesToScan(*packagesToScanForEntities)
+        em.setPersistenceXmlLocation("test-persistence.xml")
         val vendorAdapter: JpaVendorAdapter = HibernateJpaVendorAdapter()
         em.jpaVendorAdapter = vendorAdapter
         val properties = Properties()

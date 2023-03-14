@@ -20,13 +20,12 @@
         <spring.version>5.3.8</spring.version>
         <skip.integration.tests>true</skip.integration.tests>
         <skip.unit.tests>false</skip.unit.tests>
-
-        <postgres.docker.name>postgres:latest</postgres.docker.name>
+        <!--postgres.docker.name>postgres:latest</postgres.docker.name>
         <postgres.docker.env.POSTGRES_USER>postgres</postgres.docker.env.POSTGRES_USER>
-        <postgres.docker.env.POSTGRES_PASSWORD>postgres</postgres.docker.env.POSTGRES_PASSWORD>
+        <postgres.docker.env.POSTGRES_PASSWORD>postgres</postgres.docker.env.POSTGRES_PASSWORD-->
         <!--postgres.docker.env.POSTGRES_HOST_AUTH_METHOD>trust</postgres.docker.env.POSTGRES_HOST_AUTH_METHOD-->
-        <postgres.docker.wait.time>11000</postgres.docker.wait.time>
-        <postgres.docker.ports.1>18800:5432</postgres.docker.ports.1>
+        <!--postgres.docker.wait.time>11000</postgres.docker.wait.time>
+        <postgres.docker.ports.1>18800:5432</postgres.docker.ports.1-->
     </properties>
 
     <dependencies>
@@ -125,6 +124,11 @@
                     <artifactId>jboss-logging</artifactId>
                 </exclusion>
             </exclusions-->
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>5.4.2.Final</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -320,58 +324,14 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- Docker plugin to activate postgresql -->
-            <!--plugin>
-                <groupId>io.fabric8</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>0.39.1</version>
-                <configuration-->
-                    <!--skip>${skip.integration.tests}</skip>
-                    <images>
-                        <image>
-                            <alias>postgresql</alias>
-                            <name>fabric8/compose-demo:latest</name>
-                            <external>
-                                <type>compose</type>
-                                <basedir>src/integration-test/resources</basedir>
-                                <composeFile>docker-compose.yml</composeFile>
-                            </external>
-                        </image>
-                    </images>
-                </configuration-->
-                <!-- Connect start/stop to pre- and
-                     post-integration-test phase, respectively if you want to start
-                     your docker containers during integration tests -->
-                <!--executions>
-                    <execution>
-                        <id>start</id>
-                        <phase>pre-integration-test</phase>
-                        <goals-->
-                            <!-- "build" should be used to create the images with the
-                                 artifact -->
-                            <!--goal>build</goal>
-                            <goal>start</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>stop</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin-->
-
             <!-- JACOCO Configuration -->
+            <!-- https://natritmeyer.com/howto/reporting-aggregated-unit-and-integration-test-coverage-with-jacoco/ -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.7.1</version>
             </plugin>
             <plugin>
-                <!-- https://natritmeyer.com/howto/reporting-aggregated-unit-and-integration-test-coverage-with-jacoco/ -->
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.8</version>
@@ -386,7 +346,6 @@
                             <propertyName>surefire.jacoco.args</propertyName>
                         </configuration>
                     </execution>
-
                     <execution>
                         <id>after-unit-test-execution</id>
                         <phase>test</phase>
@@ -398,7 +357,6 @@
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-unit-test-coverage-report</outputDirectory>
                         </configuration>
                     </execution>
-
                     <execution>
                         <id>before-integration-test-execution</id>
                         <phase>pre-integration-test</phase>
@@ -450,8 +408,6 @@
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-merged-test-coverage-report</outputDirectory>
                         </configuration>
                     </execution>
-
-
                 </executions>
             </plugin>
             <plugin>
@@ -474,7 +430,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 

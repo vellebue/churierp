@@ -9,22 +9,32 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import java.math.BigDecimal
 import java.util.*
 import javax.sql.DataSource
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
 import java.text.SimpleDateFormat
 
 //@DataJpaTest
 class VatValueDaoITCase(@Autowired val vatValueDao: VatValueDao) : BaseContainerDBITCase() {
 
     override fun getScriptContent(): String {
-        return """
+        return """            
             INSERT INTO c_countries (country_id, name, key) VALUES ('ES', 'Spain', 'churierpweb.country.ES');
             INSERT INTO vat_types (country_id,vat_id,creation_user,creation_time,update_user,update_time,description) VALUES
-            	 ('ES','NR','angel','2022-11-13 23:10:07.746','angel','2022-11-13 23:10:07.746','Normal');
+            	 ('ES','NR','angel','2022-11-13 23:10:07.746','angel','2022-11-13 23:10:07.746','Normal');  
+            INSERT INTO vat_types (country_id,vat_id,creation_user,creation_time,update_user,update_time,description) VALUES
+            	 ('ES','EX','angel','2022-11-13 23:10:07.746','angel','2022-11-13 23:10:07.746','Exento');
+            INSERT INTO vat_values (country_id, vat_id, valid_from, valid_to, 
+                                    creation_user, creation_time, update_user, update_time,
+                                    percentage)
+                   VALUES ('ES', 'EX', '2020/01/01', null, 
+                           'angel','2022-11-13 23:10:07.746','angel','2022-11-13 23:10:07.746',
+                           '0.1');
+            COMMIT;
         """.trimIndent()
     }
 
     @Test
     fun shouldPerformVatValueInsertProperly() {
+        println("Performing shouldPerformVatValueInsertProperly")
         val dateFormat = SimpleDateFormat("yyyy/MM/dd")
         val referenceDate = dateFormat.parse(dateFormat.format(Date()))
         val vatValue = VatValue()
@@ -35,13 +45,22 @@ class VatValueDaoITCase(@Autowired val vatValueDao: VatValueDao) : BaseContainer
         vatValue.percentage = BigDecimal(21.5)
         vatValueDao.create(vatValue)
         val bdVatValue = retrieveVatValue(vatValue!!.countryId!!, vatValue!!.vatId!!)
-        Assertions.assertNotNull(bdVatValue)
-        Assertions.assertEquals(vatValue.countryId, bdVatValue!!.countryId)
-        Assertions.assertEquals(vatValue.vatId, bdVatValue!!.vatId)
-        Assertions.assertEquals(vatValue.validFrom, bdVatValue.validFrom)
-        Assertions.assertEquals(vatValue.validTo, bdVatValue.validTo)
-        Assertions.assertEquals(vatValue!!.percentage!!.toDouble(), bdVatValue.percentage!!.toDouble())
+        assertNotNull(bdVatValue)
+        assertEquals(vatValue.countryId, bdVatValue!!.countryId)
+        assertEquals(vatValue.vatId, bdVatValue!!.vatId)
+        assertEquals(vatValue.validFrom, bdVatValue.validFrom)
+        assertEquals(vatValue.validTo, bdVatValue.validTo)
+        assertEquals(vatValue!!.percentage!!.toDouble(), bdVatValue.percentage!!.toDouble())
+    }
 
+    @Test
+    fun shouldPerformVatValueDeleteProperly() {
+        println("Performing shouldPerformVatValueDeleteProperly")
+        val previousVATRegistry = retrieveVatValue("ES", "EX")
+        assertNotNull(previousVATRegistry)
+        vatValueDao.delete(previousVATRegistry!!)
+        val laterNonExistingVATRegistry = retrieveVatValue("ES", "EX")
+        assertTrue(laterNonExistingVATRegistry == null)
     }
 
     private fun retrieveVatValue(countryId : String, vatId : String) : VatValue?{
