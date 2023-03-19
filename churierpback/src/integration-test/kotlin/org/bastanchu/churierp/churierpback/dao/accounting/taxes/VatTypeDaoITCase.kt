@@ -2,14 +2,13 @@ package org.bastanchu.churierp.churierpback.dao.accounting.taxes
 
 import org.bastanchu.churierp.churierpback.BaseContainerDBITCase
 import org.bastanchu.churierp.churierpback.entity.accounting.taxes.VatType
+import org.bastanchu.churierp.churierpback.entity.accounting.taxes.VatTypePk
 import org.bastanchu.churierp.churierpback.util.annotation.FormField
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 import org.junit.jupiter.api.Assertions.*
 import java.text.SimpleDateFormat
-import java.util.stream.Collectors
-import java.util.function.Function
 
 class VatTypeDaoITCase(@Autowired val vatTypeDao: VatTypeDao) :BaseContainerDBITCase() {
 
@@ -62,6 +61,22 @@ class VatTypeDaoITCase(@Autowired val vatTypeDao: VatTypeDao) :BaseContainerDBIT
         var vatTypeFilter = VatTypeFilter("ES", "angel", "*R")
         val vatTypes = vatTypeDao.genericFilter(vatTypeFilter)
         assertEquals(2, vatTypes.size)
+    }
+
+    @Test
+    fun shouldGetByIdReturnVatTypeProperly() {
+        val pk = VatTypePk()
+        pk.countryId = "ES"
+        pk.vatId = "NR"
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val vatValue = vatTypeDao.getById(pk)
+        assertEquals("ES", vatValue.countryId)
+        assertEquals("NR", vatValue.vatId)
+        assertEquals("angel", vatValue.creationUser)
+        assertEquals("2022-11-13", dateFormat.format(vatValue.creationTime))
+        assertEquals("angel", vatValue.updateUser)
+        assertEquals("2022-11-13", dateFormat.format(vatValue.updateTime))
+        assertEquals("Normal", vatValue.description)
     }
 
     fun assertAll(vatTypesMap : Map<String, VatType>) {

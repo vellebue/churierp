@@ -2,6 +2,7 @@ package org.bastanchu.churierp.churierpback.dao.accounting.taxes
 
 import org.bastanchu.churierp.churierpback.BaseContainerDBITCase
 import org.bastanchu.churierp.churierpback.entity.accounting.taxes.VatValue
+import org.bastanchu.churierp.churierpback.entity.accounting.taxes.VatValuePk
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
