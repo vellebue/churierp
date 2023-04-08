@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 
 import org.junit.jupiter.api.Assertions.*
 import java.text.SimpleDateFormat
+import java.util.*
 
 class VatTypeDaoITCase(@Autowired val vatTypeDao: VatTypeDao) :BaseContainerDBITCase() {
 
@@ -16,11 +17,15 @@ class VatTypeDaoITCase(@Autowired val vatTypeDao: VatTypeDao) :BaseContainerDBIT
 
         class VatTypeFilter(
             @FormField(groupId = 1, indexInGroup = 1)
-            val countryId : String?,
+            val countryId : String? = null,
             @FormField(groupId = 1, indexInGroup = 2)
-            val creationUser : String?,
+            val creationUser : String? = null,
             @FormField(groupId = 1, indexInGroup = 3)
-            val vatId : String?
+            val vatId : String? = null,
+            @FormField(groupId = 1, indexInGroup = 4, field = "updateTime", from = true)
+            val updateTimeFrom : Date? = null,
+            @FormField(groupId = 1, indexInGroup = 4, field = "updateTime", to = true)
+            val updateTimeTo : Date? = null
         )
     }
 
@@ -61,6 +66,28 @@ class VatTypeDaoITCase(@Autowired val vatTypeDao: VatTypeDao) :BaseContainerDBIT
         var vatTypeFilter = VatTypeFilter("ES", "angel", "*R")
         val vatTypes = vatTypeDao.genericFilter(vatTypeFilter)
         assertEquals(2, vatTypes.size)
+    }
+
+    @Test
+    fun shouldFilterGenericSelectedItemsFromDateProperly() {
+        val dateFormat = SimpleDateFormat("yyyy/MM/dd")
+        var vatTypeFilterWithData = VatTypeFilter(updateTimeFrom = dateFormat.parse("2022/11/11"))
+        val vatTypesWithData = vatTypeDao.genericFilter(vatTypeFilterWithData)
+        assertEquals(4, vatTypesWithData.size)
+        var vatTypeFilterWithoutData = VatTypeFilter(updateTimeFrom = dateFormat.parse("2022/11/14"))
+        val vatTypesWithoutData = vatTypeDao.genericFilter(vatTypeFilterWithoutData)
+        assertEquals(0, vatTypesWithoutData.size)
+    }
+
+    @Test
+    fun shouldFilterGenericSelectedItemsToDateProperly() {
+        val dateFormat = SimpleDateFormat("yyyy/MM/dd")
+        var vatTypeFilterWithData = VatTypeFilter(updateTimeTo = dateFormat.parse("2022/11/11"))
+        val vatTypesWithData = vatTypeDao.genericFilter(vatTypeFilterWithData)
+        assertEquals(0, vatTypesWithData.size)
+        var vatTypeFilterWithoutData = VatTypeFilter(updateTimeTo = dateFormat.parse("2022/11/14"))
+        val vatTypesWithoutData = vatTypeDao.genericFilter(vatTypeFilterWithoutData)
+        assertEquals(4, vatTypesWithoutData.size)
     }
 
     @Test

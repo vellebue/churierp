@@ -36,7 +36,7 @@ class User : TraceableEntity() {
     @Column(name = "END_DATE")
     var endDate: Date? = null
 
-    @OneToOne(cascade = arrayOf(CascadeType.ALL) )
+    @OneToOne
     @JoinColumn(name = "language_id")
     @org.hibernate.annotations.Fetch(org.hibernate.annotations.FetchMode.JOIN)
     var language : Language? = null

@@ -55,7 +55,7 @@ public class PagedTableComponent<T> extends VerticalLayout
     private Class<T> modelClass;
     private MessageSource messageSource;
     private Div gridContainer = new Div();
-    private PaginatedGrid<T> grid;
+    private PaginatedGrid<T, Object> grid;
     private Double widthPercentage = DEFAULT_WIDTH_PERCENTAGE;
     private PagedTableComponentListener<T> listener;
     private List<Field> displayableFields;
@@ -85,7 +85,7 @@ public class PagedTableComponent<T> extends VerticalLayout
             gridContainer.remove(grid);
             gridContainer.removeAll();
         }
-        this.grid = new PaginatedGrid<T>();
+        this.grid = new PaginatedGrid<T, Object>();
         grid.setPageSize(DEFAULT_PAGE_SIZE);
         grid.setPaginatorSize(DEFAULT_PAGINATOR_SIZE);
         configureGridColumns();
