@@ -30,6 +30,7 @@ jdbc.churierpweb.username=yourdatabaseuser
 jdbc.churierpweb.password=databaseuserpassword
 </code>
 
+
 Churierpweb requires jdk 17 and Maven 3.5.8 to be built properly. Once installed these tools
 you can build Churierp as usual with Maven.
 
