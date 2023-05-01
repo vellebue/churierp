@@ -10,10 +10,7 @@ import org.bastanchu.churierp.churierpback.util.annotation.ListField
 import org.hibernate.validator.constraints.NotEmpty
 import java.math.BigDecimal
 import java.util.*
-import javax.validation.constraints.Max
-import javax.validation.constraints.Min
-import javax.validation.constraints.NotNull
-import javax.validation.constraints.Size
+import javax.validation.constraints.*
 import kotlin.collections.ArrayList
 
 class VatValueDto : Validator, Reseteable, Copiable<VatValueDto>{
@@ -21,7 +18,7 @@ class VatValueDto : Validator, Reseteable, Copiable<VatValueDto>{
     @NotEmpty
     @Size(max = 2)
     @Field(key = "churierpweb.accounting.taxes.vatvalue.dto.field.countryId")
-    @FormField(groupId = 0, indexInGroup = 0, widthPercentage = 30.0,
+    @FormField(groupId = 0, indexInGroup = 0, widthPercentage = 40.0,
         comboBoxConfiguration = ComboBoxConfiguration(mapFieldName = "countriesMap")
     )
     @ListField(keyField = true)
@@ -32,7 +29,7 @@ class VatValueDto : Validator, Reseteable, Copiable<VatValueDto>{
     @NotEmpty
     @Size(max = 2)
     @Field(key = "churierpweb.accounting.taxes.vatvalue.dto.field.vatId")
-    @FormField(groupId = 0, indexInGroup = 1, widthPercentage = 30.0,
+    @FormField(groupId = 0, indexInGroup = 1, widthPercentage = 40.0,
                comboBoxConfiguration = ComboBoxConfiguration(mapFieldName = "vatTypesMap", conditionFieldName = "countryId"))
     @ListField(keyField = true)
     var vatId : String? = null
@@ -50,12 +47,23 @@ class VatValueDto : Validator, Reseteable, Copiable<VatValueDto>{
     @ListField
     var validTo : Date? = null;
 
-    @Min(0)
-    @Max(100)
+    @NotNull
+    @DecimalMin("0.0", inclusive = true)
+    @DecimalMax("100.0", inclusive = true)
+    @Digits(integer=3, fraction=2)
     @Field(key = "churierpweb.accounting.taxes.vatvalue.dto.field.percentage")
-    @FormField(groupId = 1, indexInGroup = 2, widthPercentage = 30.0)
+    @FormField(groupId = 2, indexInGroup = 0, widthPercentage = 25.0)
     @ListField
     var percentage : BigDecimal? = null
+
+    @NotNull
+    @DecimalMin("0.0", inclusive = true)
+    @DecimalMax("100.0", inclusive = true)
+    @Digits(integer=3, fraction=2)
+    @Field(key = "churierpweb.accounting.taxes.vatvalue.dto.field.upcharge")
+    @FormField(groupId = 2, indexInGroup = 1, widthPercentage = 25.0)
+    @ListField
+    var upcharge : BigDecimal? = null
 
     override fun reset() {
         countryId = null
@@ -74,6 +82,7 @@ class VatValueDto : Validator, Reseteable, Copiable<VatValueDto>{
         copy.validFrom = validFrom
         copy.validTo = validTo
         copy.percentage = percentage
+        copy.upcharge = upcharge
         return copy
     }
 

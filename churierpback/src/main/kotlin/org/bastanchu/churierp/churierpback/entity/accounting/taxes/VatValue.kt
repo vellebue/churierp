@@ -28,4 +28,7 @@ class VatValue : TraceableEntity() {
 
     @Column(name = "PERCENTAGE")
     var percentage : BigDecimal? = null
+
+    @Column(name = "UPCHARGE")
+    var upcharge : BigDecimal? = null
 }

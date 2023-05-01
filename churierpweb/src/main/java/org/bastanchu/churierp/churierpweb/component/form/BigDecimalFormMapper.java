@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.validation.Validator;
+import javax.validation.constraints.NotNull;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class BigDecimalFormMapper<T> extends AbstractFormMapper<T> {
         if (fieldEntry.getFormField().readOnly()) {
             formComponent.setReadOnly(true);
         }
-        if (field.getAnnotation(NotEmpty.class) != null) {
+        if ((field.getAnnotation(NotEmpty.class) != null) || (field.getAnnotation(NotNull.class) != null)) {
             formComponent.getStyle().set("border-left-style","solid");
             formComponent.getStyle().set("border-left-width","thick");
             formComponent.getStyle().set("border-left-color","#FF0000");

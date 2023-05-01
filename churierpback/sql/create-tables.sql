@@ -68,6 +68,6 @@ create table VAT_VALUES(COUNTRY_ID varchar(2) NOT NULL ,
                         VAT_ID varchar(2) NOT NULL,
                         VALID_FROM date NOT NULL, VALID_TO date NULL,
                         CREATION_USER VARCHAR(100) NOT NULL, CREATION_TIME TIMESTAMP NOT NULL, UPDATE_USER VARCHAR(100) NOT NULL, UPDATE_TIME TIMESTAMP NOT NULL,
-                        PERCENTAGE DECIMAL(5,2) NOT NULL,
+                        PERCENTAGE DECIMAL(5,2) NOT NULL, UPCHARGE DECIMAL(5,2) NOT NULL,
                         primary key(COUNTRY_ID, VAT_ID, VALID_FROM),
                         constraint fk_vat_values_vat_regions foreign key (COUNTRY_ID, VAT_ID) references VAT_TYPES(COUNTRY_ID, VAT_ID));

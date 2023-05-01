@@ -9,6 +9,7 @@ import com.vaadin.flow.data.binder.ValidationResult;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Validator;
+import javax.validation.constraints.NotNull;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.Map;
@@ -23,7 +24,7 @@ class DateFormMapper<T> extends AbstractFormMapper<T> {
     public FormLayout.FormItem mapFormEntry(CustomForm form, CustomForm.FieldEntry fieldEntry) {
         Field field = fieldEntry.getField();
         DatePicker formComponent = new DatePicker();
-        if (field.getAnnotation(NotEmpty.class) != null) {
+        if ((field.getAnnotation(NotEmpty.class) != null) || (field.getAnnotation(NotNull.class) != null)) {
             formComponent.getStyle().set("border-left-style","solid");
             formComponent.getStyle().set("border-left-width","thick");
             formComponent.getStyle().set("border-left-color","#FF0000");
