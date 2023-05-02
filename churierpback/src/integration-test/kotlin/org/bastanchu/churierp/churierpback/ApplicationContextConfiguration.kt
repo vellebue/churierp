@@ -58,6 +58,8 @@ open class ApplicationContextConfiguration(@Autowired val environment: Environme
         val properties = Properties()
         properties.setProperty("hibernate.dialect", environment.getProperty("hibernate.churierpweb.dialect"))
         properties.setProperty("hibernate.temp.use_jdbc_metadata_defaults", "false")
+        properties.setProperty("hibernate.show_sql", "false")
+        properties.setProperty("hibernate.format_sql", "false")
         em.setJpaProperties(properties)
         return em
     }

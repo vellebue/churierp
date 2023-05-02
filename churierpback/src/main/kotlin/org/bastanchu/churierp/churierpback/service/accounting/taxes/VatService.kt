@@ -27,6 +27,16 @@ interface VatService {
 
     fun getVatValues() : List<VatValueDto>
 
+    /**
+     * Gets VAT Value appliable for a country, VAT type and a reference date (e.g. invoice date)
+     *
+     * @param countryId Country ID for vat.
+     * @param vatType VAT type to query for.
+     * @param vatDate VAT date to query which is the active VAT Value at this date.
+     *
+     * @return An active VAT value under given parameters or null if there is no active VAT value
+     *         for that given country, VAT ID and date.
+     */
     fun getVatValueByCountryTypeAndDate(countryId : String, vatType : String, vatDate : Date) : VatValueDto
 
     /**

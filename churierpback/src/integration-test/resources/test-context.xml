@@ -10,5 +10,6 @@
     <bean id="UserDao" class="org.bastanchu.churierp.churierpback.dao.impl.administration.users.UserDaoImpl"/>
     <bean id="VatTypeDao" class="org.bastanchu.churierp.churierpback.dao.impl.accounting.taxes.VatTypesDaoImpl"/>
     <bean id="VatValueDao" class="org.bastanchu.churierp.churierpback.dao.impl.accounting.taxes.VatValuesDaoImpl"/>
+    <bean id="VatService" class="org.bastanchu.churierp.churierpback.service.accounting.taxes.impl.VatServiceImpl"/>
 
 </beans>

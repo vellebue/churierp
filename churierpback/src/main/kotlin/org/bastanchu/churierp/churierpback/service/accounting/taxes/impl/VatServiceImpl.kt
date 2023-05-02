@@ -16,8 +16,8 @@ import kotlin.collections.HashMap
 
 @Service
 @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-class VatServiceImpl(@Autowired val vatTypeDao: VatTypeDao,
-                     @Autowired val vatValueDao: VatValueDao) : VatService {
+class VatServiceImpl(@Autowired private val vatTypeDao: VatTypeDao,
+                     @Autowired private val vatValueDao: VatValueDao) : VatService {
 
     override fun getVatTypes(): List<VatTypeDto> {
         return  vatTypeDao.toDataTransferObjectList(vatTypeDao.listAll());

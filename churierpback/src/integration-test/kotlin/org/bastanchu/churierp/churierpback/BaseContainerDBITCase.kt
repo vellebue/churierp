@@ -38,7 +38,7 @@ import javax.sql.DataSource
 @SpringBootTest
 @ContextConfiguration(classes = [ApplicationContextConfiguration::class],
     initializers = [BaseContainerDBITCase.Companion.Initializer::class],
-                      value = "classpath:test-context.xml")
+                      value = arrayOf("classpath:test-context.xml"))
 @Testcontainers
 /*
  * Recipe to ensure something is executed before all tests in this class

@@ -12,8 +12,6 @@ import org.springframework.context.ApplicationContext
 
 class VatTypeDto : Reseteable, Copiable<VatTypeDto> {
 
-    var appContext : ApplicationContext? = null
-
     @NotEmpty
     @Size(max = 2)
     @Field(key = "churierpweb.accounting.taxes.vattype.dto.field.countryId")

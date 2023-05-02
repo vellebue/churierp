@@ -25,10 +25,10 @@ class VatValueDaoITCase(@Autowired val vatValueDao: VatValueDao) : BaseContainer
             	 ('ES','EX','angel','2022-11-13 23:10:07.746','angel','2022-11-13 23:10:07.746','Exento');
             INSERT INTO vat_values (country_id, vat_id, valid_from, valid_to, 
                                     creation_user, creation_time, update_user, update_time,
-                                    percentage)
+                                    percentage, upcharge)
                    VALUES ('ES', 'EX', '2020/01/01', null, 
                            'angel','2022-11-13 23:10:07.746','angel','2022-11-13 23:10:07.746',
-                           '0.1');
+                           '0.1','0.0');
             COMMIT;
         """.trimIndent()
     }
@@ -44,14 +44,20 @@ class VatValueDaoITCase(@Autowired val vatValueDao: VatValueDao) : BaseContainer
         vatValue.validFrom = referenceDate
         vatValue.validTo = referenceDate
         vatValue.percentage = BigDecimal(21.5)
+        vatValue.upcharge = BigDecimal(5.2)
         vatValueDao.create(vatValue)
+        vatValueDao.flush()
         val bdVatValue = retrieveVatValue(vatValue!!.countryId!!, vatValue!!.vatId!!)
         assertNotNull(bdVatValue)
         assertEquals(vatValue.countryId, bdVatValue!!.countryId)
         assertEquals(vatValue.vatId, bdVatValue!!.vatId)
         assertEquals(vatValue.validFrom, bdVatValue.validFrom)
         assertEquals(vatValue.validTo, bdVatValue.validTo)
-        assertEquals(vatValue!!.percentage!!.toDouble(), bdVatValue.percentage!!.toDouble())
+        assertEquals(vatValue.percentage!!.toDouble(), bdVatValue.percentage!!.toDouble())
+        val expectedUpcharge = vatValue.upcharge!!.toDouble()
+        assertNotNull(bdVatValue.upcharge)
+        val retrievedUpcharge = bdVatValue.upcharge!!.toDouble()
+        assertEquals(expectedUpcharge, retrievedUpcharge)
     }
 
     @Test
@@ -66,7 +72,7 @@ class VatValueDaoITCase(@Autowired val vatValueDao: VatValueDao) : BaseContainer
 
     private fun retrieveVatValue(countryId : String, vatId : String) : VatValue?{
         val sql = """
-            select country_id, vat_id, valid_from, valid_to, creation_user, creation_time, update_user, update_time, percentage
+            select country_id, vat_id, valid_from, valid_to, creation_user, creation_time, update_user, update_time, percentage, upcharge
               from vat_values
              where country_id = ? and vat_id = ? 
         """.trimIndent()
@@ -89,6 +95,7 @@ class VatValueDaoITCase(@Autowired val vatValueDao: VatValueDao) : BaseContainer
                         vatValue.updateUser = it.getString("update_user")
                         vatValue.updateTime = it.getTimestamp("update_time")
                         vatValue.percentage = it.getBigDecimal("percentage")
+                        vatValue.upcharge = it.getBigDecimal("upcharge")
                         return vatValue
                     } else {
                         return null
