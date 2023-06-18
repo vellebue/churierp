@@ -61,7 +61,7 @@ class VatValueDto : Validator, Reseteable, Copiable<VatValueDto>{
     @DecimalMax("100.0", inclusive = true)
     @Digits(integer=3, fraction=2)
     @Field(key = "churierpweb.accounting.taxes.vatvalue.dto.field.upcharge")
-    @FormField(groupId = 2, indexInGroup = 1, widthPercentage = 25.0)
+    @FormField(groupId = 2, indexInGroup = 1, widthPercentage = 33.0)
     @ListField
     var upcharge : BigDecimal? = null
 

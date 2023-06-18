@@ -1,5 +1,9 @@
 package org.bastanchu.churierp.churierpweb.component.form;
 
+import com.vaadin.flow.component.formlayout.FormLayout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasEnabled;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -141,8 +145,8 @@ public class CustomForm<T> extends FormLayout {
                             colSpan, comboBoxConfiguration, formFieldAnnotation.widthPercentage(), field, keyListField));
                 }
             } else if (field.getAnnotation(org.bastanchu.churierp.churierpback.util.annotation.HiddenFormField.class) != null) {
-                    // Fill initial null value for hidden field
-                    formHiddenValuesMap.put(field.getName(), null);
+                // Fill initial null value for hidden field
+                formHiddenValuesMap.put(field.getName(), null);
             }
         }
         return map;
@@ -175,79 +179,51 @@ public class CustomForm<T> extends FormLayout {
         Integer biggestGroupSize = getBiggestFormGroupsize(formGroupsMap);
         setColspan(new Div(), biggestGroupSize * 2);
         for (Set<CustomForm.FieldEntry> groupSet :formGroupsMap.values()) {
-            int groupSetSize = 0;
-            for (CustomForm.FieldEntry fieldEntry:groupSet) {
-                FormLayout.FormItem formItem = addFieldToForm(fieldEntry);
-                setColspan(formItem, fieldEntry.getColSpan());
-                formItem.getStyle().set("max-width", fieldEntry.getWidthPercentage() * fieldEntry.getColSpan() + "%");
-                groupSetSize += fieldEntry.getColSpan();
-            }
-            if (biggestGroupSize > groupSetSize) {
-                Integer diff = biggestGroupSize - groupSetSize;
-                for (int i = 0 ; i < diff ; i++) {
-                    //Div remainingDiv = new Div();
-                    //remainingDiv.getStyle().set("width", diff * getRemainingGroupSize(groupSet) + "%");
-                    FormItem emptyFormItem = addFormItem(new Div(), "");
-                    emptyFormItem.getStyle().set("max-width", diff * getRemainingGroupSize(groupSet) + "%");
-                }
-            }
+           for (CustomForm.FieldEntry fieldEntry : groupSet) {
+                addFieldToForm(fieldEntry);
+           }
         }
         // Finally add lower errors box
         add(errorsBox, biggestGroupSize * 2);
     }
 
-    private double getRemainingGroupSize(Set<CustomForm.FieldEntry> groupSet) {
-        double groupSize = 0.0;
-        for (CustomForm.FieldEntry it : groupSet) {
-            groupSize += it.getWidthPercentage() * it.getColSpan();
-        }
-        if (groupSize < 100.0) {
-            double remainingSize = 100.0 - groupSize;
-            remainingSize = remainingSize - 0.1 * remainingSize;
-            return remainingSize;
-        } else {
-            return 0.0;
-        }
-    }
-
-    private FormLayout.FormItem addFieldToForm(CustomForm.FieldEntry fieldEntry) {
+    private Component addFieldToForm(CustomForm.FieldEntry fieldEntry) {
         Class<?> fieldType = fieldEntry.getFieldType();
-        FormLayout.FormItem formItem = null;
+        Component component = null;
         boolean forceReadOnly = fieldEntry.listKeyField && readOnlyKeys;
         if (!fieldEntry.comboBoxConfiguration.mapFieldName().equals("")) {
             //Combo Box
             ComboBoxFormMapper<T> comboBoxFormMapper =
                     new ComboBoxFormMapper<>(beanClass, binderValidator, binderReader,
                             validator, formComponentsMap, forceReadOnly);
-            formItem = comboBoxFormMapper.mapFormEntry(this, fieldEntry);
+            component = comboBoxFormMapper.mapFieldEntry(this, fieldEntry);
         }
         else if (Date.class.isAssignableFrom(fieldType)) {
             // Date Picker
             DateFormMapper<T> dateFormMapper =
                     new DateFormMapper<>(beanClass, binderValidator, binderReader,
                             validator, formComponentsMap, forceReadOnly);
-            formItem = dateFormMapper.mapFormEntry(this, fieldEntry);
+            component = dateFormMapper.mapFieldEntry(this, fieldEntry);
         } else if (Integer.class.isAssignableFrom(fieldType)) {
             // Number Text Field
             IntegerFormMapper<T> integerFormMapper =
                     new IntegerFormMapper<>(beanClass, binderValidator, binderReader,
                             validator, formComponentsMap, forceReadOnly);
-            formItem = integerFormMapper.mapFormEntry(this, fieldEntry);
+            component = integerFormMapper.mapFieldEntry(this, fieldEntry);
         } else if(BigDecimal.class.isAssignableFrom(fieldType)) {
             // BigDecimal field
             BigDecimalFormMapper<T> bigDecimalFormMapper =
                     new BigDecimalFormMapper<>(beanClass, binderValidator, binderReader,
                             validator, formComponentsMap, forceReadOnly);
-            formItem = bigDecimalFormMapper.mapFormEntry(this, fieldEntry);
+            component = bigDecimalFormMapper.mapFieldEntry(this, fieldEntry);
         } else {
             // Generic Text Field
             StringFormMapper<T> stringFormMapper =
                     new StringFormMapper<>(beanClass, binderValidator, binderReader,
                             validator, formComponentsMap, forceReadOnly);
-            formItem = stringFormMapper.mapFormEntry(this, fieldEntry);
+            component = stringFormMapper.mapFieldEntry(this, fieldEntry);
         }
-
-        return formItem;
+        return component;
     }
 
     public void addErrorMessageKey(String errorMessageKey, Object[] parameters) {

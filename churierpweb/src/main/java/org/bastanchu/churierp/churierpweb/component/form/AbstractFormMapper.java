@@ -2,6 +2,7 @@ package org.bastanchu.churierp.churierpweb.component.form;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
@@ -43,7 +44,22 @@ abstract class AbstractFormMapper<T> {
         this.forceReadOnly = forceReadOnly;
     }
 
+    protected Div buildComponentContainer(Component component) {
+        Div divContainer = new Div();
+        Div componentFiller = new Div();
+        Div divFiller = new Div();
+        componentFiller.getStyle().set("width", "90%");
+        divFiller.getStyle().set("width","10%");
+        componentFiller.add(component);
+        divContainer.add(componentFiller);
+        divContainer.add(divFiller);
+        return divContainer;
+    }
+
+    @Deprecated
     public abstract FormLayout.FormItem mapFormEntry(CustomForm form, CustomForm.FieldEntry fieldEntry);
+
+    public abstract Component mapFieldEntry(CustomForm form, CustomForm.FieldEntry fieldEntry);
 
     protected Object binderGetter(Field field, Object e) {
         try {

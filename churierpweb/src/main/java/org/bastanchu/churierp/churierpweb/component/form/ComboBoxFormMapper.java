@@ -3,6 +3,7 @@ package org.bastanchu.churierp.churierpweb.component.form;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationResult;
@@ -33,6 +34,7 @@ public class ComboBoxFormMapper<T> extends AbstractFormMapper<T> {
     }
 
     @Override
+    @Deprecated
     public FormLayout.FormItem mapFormEntry(CustomForm form, CustomForm.FieldEntry fieldEntry) {
         Field field = fieldEntry.getField();
         ComboBox<String> formComponent = generateComboBox(fieldEntry);
@@ -84,7 +86,7 @@ public class ComboBoxFormMapper<T> extends AbstractFormMapper<T> {
                     return e1.getValue().compareTo(e2.getValue());
                 }
             }).map(e -> e.getKey()).collect(Collectors.toList());
-            ComboBox<String> formComponent = new ComboBox<>();
+            ComboBox<String> formComponent = new ComboBox<>(fieldEntry.getFieldLabel());
             formComponent.setItems(itemKeys);
             formComponent.setItemLabelGenerator(e -> e + " - " + itemsMap.get(e));
             return formComponent;
@@ -96,7 +98,7 @@ public class ComboBoxFormMapper<T> extends AbstractFormMapper<T> {
                 throw new RuntimeException("Component for field " + conditionFieldName + " for DTO class " + beanClass.getName() + " is not defined as ComboBox");
             }
             Map<String, Map<String, String>> surrogateMap = getSurrogateComboItemsMap(fieldEntry);
-            SurrogateComboBox formComponent = new SurrogateComboBox(surrogateMap, masterComboBox);
+            SurrogateComboBox formComponent = new SurrogateComboBox(surrogateMap, masterComboBox, fieldEntry.getFieldLabel());
             return formComponent;
         }
     }
@@ -160,4 +162,46 @@ public class ComboBoxFormMapper<T> extends AbstractFormMapper<T> {
         return conditionedMapFieldValue;
     }
 
+    @Override
+    public Component mapFieldEntry(CustomForm form, CustomForm.FieldEntry fieldEntry) {
+        Field field = fieldEntry.getField();
+        ComboBox<String> formComponent = generateComboBox(fieldEntry);
+        if (fieldEntry.getFormField().readOnly()) {
+            formComponent.setReadOnly(true);
+        }
+        if (field.getAnnotation(NotEmpty.class) != null) {
+            Div prefix = new Div();
+            prefix.getStyle().set("min-width","2px");
+            prefix.getStyle().set("min-height","20px");
+            prefix.getStyle().set("background-color","#FF0000");
+            PrefixUtil.setPrefixComponent(formComponent, prefix);
+        }
+        formComponent.getStyle().set("width","100%");
+        if (forceReadOnly || fieldEntry.getFormField().readOnly()) {
+            formComponent.setReadOnly(true);
+        }
+        form.add(buildComponentContainer(formComponent), fieldEntry.getColSpan());
+        binderReader.forField(formComponent)
+                .bind(e -> {
+                    String item = (String) binderGetter(field, e);
+                    return item;
+                }, (e , v) -> {
+                    binderSetter(field, e, v);
+                });
+        binderValidator.forField(formComponent).withValidator((e, valueContext) -> {
+            String validation = binderValidator(field);
+            if (validation.equals("")) {
+                return ValidationResult.ok();
+            } else {
+                return ValidationResult.error(validation);
+            }
+        }).bind(e -> {
+            String item = (String) binderGetter(field, e);
+            return item;
+        }, (e , v) -> {
+            binderSetter(field, e, v);
+        });
+        formComponentsMap.put(fieldEntry.getField().getName(), formComponent);
+        return formComponent;
+    }
 }

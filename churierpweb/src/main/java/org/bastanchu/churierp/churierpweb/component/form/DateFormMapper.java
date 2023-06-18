@@ -3,6 +3,7 @@ package org.bastanchu.churierp.churierpweb.component.form;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationResult;
@@ -21,6 +22,7 @@ class DateFormMapper<T> extends AbstractFormMapper<T> {
     }
 
     @Override
+    @Deprecated
     public FormLayout.FormItem mapFormEntry(CustomForm form, CustomForm.FieldEntry fieldEntry) {
         Field field = fieldEntry.getField();
         DatePicker formComponent = new DatePicker();
@@ -53,5 +55,42 @@ class DateFormMapper<T> extends AbstractFormMapper<T> {
         });
         formComponentsMap.put(fieldEntry.getField().getName(), formComponent);
         return formComponentContainer;
+    }
+
+    @Override
+    public Component mapFieldEntry(CustomForm form, CustomForm.FieldEntry fieldEntry) {
+        Field field = fieldEntry.getField();
+        DatePicker formComponent = new DatePicker(fieldEntry.getFieldLabel());
+        if ((field.getAnnotation(NotEmpty.class) != null) || (field.getAnnotation(NotNull.class) != null)) {
+            Div prefix = new Div();
+            prefix.getStyle().set("min-width","2px");
+            prefix.getStyle().set("min-height","20px");
+            prefix.getStyle().set("background-color","#FF0000");
+            PrefixUtil.setPrefixComponent(formComponent, prefix);
+        }
+        if (forceReadOnly || fieldEntry.getFormField().readOnly()) {
+            formComponent.setReadOnly(true);
+        }
+        form.add(buildComponentContainer(formComponent), fieldEntry.getColSpan());
+        binderReader.forField(formComponent)
+                .bind(e -> {
+                    return (LocalDate) binderGetter(field, e);
+                }, (e , v) -> {
+                    binderSetter(field, e, v);
+                });
+        binderValidator.forField(formComponent).withValidator((e, valueContext) -> {
+            String validation = binderValidator(field);
+            if (validation.equals("")) {
+                return ValidationResult.ok();
+            } else {
+                return ValidationResult.error(validation);
+            }
+        }).bind(e -> {
+            return (LocalDate) binderGetter(field, e);
+        }, (e , v) -> {
+            binderSetter(field, e, v);
+        });
+        formComponentsMap.put(fieldEntry.getField().getName(), formComponent);
+        return formComponent;
     }
 }

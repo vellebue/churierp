@@ -12,8 +12,8 @@ class SurrogateComboBox extends ComboBox {
     private Map<String, Map<String, String>> surrogateModelMap;
     private ComboBox masterComboBox;
 
-    public SurrogateComboBox(Map<String, Map<String, String>> surrogateModelMap, ComboBox<String> masterComboBox) {
-        super();
+    public SurrogateComboBox(Map<String, Map<String, String>> surrogateModelMap, ComboBox<String> masterComboBox, String label) {
+        super(label);
         this.surrogateModelMap = surrogateModelMap;
         this.masterComboBox = masterComboBox;
         SurrogateComboBox thisCombo = this;
