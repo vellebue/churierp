@@ -17,5 +17,11 @@ drop table C_COUNTRIES;
 drop sequence SEQ_USERS;
 drop table USERS;
 
+--Types Model
+drop table TYPED_SUBTYPES;
+drop table TYPED_TYPES;
+drop table C_TYPED_ENTITIES;
+drop table C_TYPED_AREAS;
+
 --Languages Model
 drop table C_LANGUAGES;

@@ -11,16 +11,22 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
+import java.math.BigDecimal
 import java.sql.Timestamp
+import java.util.*
 import javax.persistence.EntityManager
 import javax.persistence.Id
 import javax.persistence.criteria.CriteriaQuery
 import javax.persistence.criteria.Root
+import kotlin.collections.ArrayList
 
 
 open class BaseDaoImpl<K,E> (open val entityManager: EntityManager)  : BaseDao<K,E> {
 
     val logger = LoggerFactory.getLogger(BaseDaoImpl::class.java);
+
+    val basicTypes = listOf(String::class.java, Date::class.java, Integer::class.java,
+                            BigDecimal::class.java)
 
     var entityClassTypeClass : Class<E>? = null;
     var keyClassTypeClass : Class<K>? = null;
@@ -52,9 +58,11 @@ open class BaseDaoImpl<K,E> (open val entityManager: EntityManager)  : BaseDao<K
         if (filterDeclaredFields != null) {
             for (field in filterDeclaredFields) {
                 field.isAccessible = true;
+                val fieldType = field.type
                 val fieldValue = field.get(filter);
                 val fieldName = field.name;
-                if (fieldValue != null) {
+                val basicType = basicTypes.filter { it.isAssignableFrom(fieldType) }.size > 0
+                if (basicType && (fieldValue != null)) {
                     criteriaQuery = criteriaQuery.where(builder.equal(root.get<Any>(fieldName), fieldValue));
                 }
             }

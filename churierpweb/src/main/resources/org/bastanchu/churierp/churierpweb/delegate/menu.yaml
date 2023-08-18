@@ -34,6 +34,9 @@ list:
         children:
           - menuText : "churierpweb.menu.administration.companies.List"
             factoryClassName: "org.bastanchu.churierp.churierpweb.view.administration.companies.ThematicCompaniesView$Factory"
+      - menuText: "churierpweb.menu.administration.Types"
+        url: ""
+        className: "org.bastanchu.churierp.churierpweb.view.administration.types.TypesSubtypesView"
   - menuText: "churierpweb.menu.Accounting"
     url: ""
     children:

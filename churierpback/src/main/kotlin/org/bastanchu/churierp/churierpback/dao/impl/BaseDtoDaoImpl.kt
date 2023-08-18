@@ -68,4 +68,12 @@ open abstract class BaseDtoDaoImpl<K, E, D> (override val entityManager: EntityM
         val copyUtils = CopyUtil.Instance;
         copyUtils.copyValues(dto as Any, entity as Any);
     }
+
+    override fun fromDtoToEntityList(dtoList: List<D>?): List<E> {
+        if (dtoList != null) {
+            return dtoList.stream().map { fromDtoToEntity(it) }.collect(Collectors.toList())
+        } else {
+            return ArrayList()
+        }
+    }
 }

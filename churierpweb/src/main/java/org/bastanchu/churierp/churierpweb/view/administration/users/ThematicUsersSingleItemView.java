@@ -5,7 +5,9 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import org.bastanchu.churierp.churierpback.dto.administration.users.UserDto;
 import org.bastanchu.churierp.churierpback.dto.administration.users.UserFilterDto;
+import org.bastanchu.churierp.churierpback.entity.administration.types.Type;
 import org.bastanchu.churierp.churierpback.service.LanguageService;
+import org.bastanchu.churierp.churierpback.service.administration.TypesSubtypesService;
 import org.bastanchu.churierp.churierpback.service.administration.UserService;
 import org.bastanchu.churierp.churierpweb.component.button.RedButton;
 import org.bastanchu.churierp.churierpweb.component.form.CustomForm;
@@ -25,10 +27,14 @@ public class ThematicUsersSingleItemView extends ThematicBodySingleItemView<User
 
     private CustomForm<UserDto> form = null;//new CustomForm<>(new UserDto(), getMessageSource());
     private Map<String, String> languagesMap = null;
+    private Map<String, String> typesMap = null;
+    private Map<String, Map<String, String>> subtypesMap;
     @Autowired
     private UserService userService;
     @Autowired
     private LanguageService languageService;
+    @Autowired
+    private TypesSubtypesService typesSubtypesService;
 
     public ThematicUsersSingleItemView(ApplicationContext appContext) {
         super(appContext);
@@ -36,8 +42,12 @@ public class ThematicUsersSingleItemView extends ThematicBodySingleItemView<User
                 null,
                 LocaleContextHolder.getLocale()));
         languagesMap = languageService.getAllLanguagesMap(LocaleContextHolder.getLocale());
+        typesMap = typesSubtypesService.getTypesMap(Type.Area.ADMINISTRATION.getId(), Type.Entity.USER.getId());
+        subtypesMap = typesSubtypesService.getSubtypesMap(Type.Area.ADMINISTRATION.getId(), Type.Entity.USER.getId());
         UserDto userInitialModelDto = new UserDto();
         userInitialModelDto.setLanguagesMap(languagesMap);
+        userInitialModelDto.setUserTypesMap(typesMap);
+        userInitialModelDto.setUserSubtypesMap(subtypesMap);
         form = new CustomForm<>(userInitialModelDto, getMessageSource());
         form.setWidthPercentage(50.0);
         add(form);

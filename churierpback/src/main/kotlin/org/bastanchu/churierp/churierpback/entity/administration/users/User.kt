@@ -40,4 +40,10 @@ class User : TraceableEntity() {
     @JoinColumn(name = "language_id")
     @org.hibernate.annotations.Fetch(org.hibernate.annotations.FetchMode.JOIN)
     var language : Language? = null
+
+    @Column(name = "USER_TYPE")
+    var userType : String? = null
+
+    @Column(name = "USER_SUBTYPE")
+    var userSubtype : String? = null
 }

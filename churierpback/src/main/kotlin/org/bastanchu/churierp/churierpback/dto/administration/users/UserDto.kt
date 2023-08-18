@@ -67,4 +67,23 @@ class UserDto {
 
     var languagesMap : Map<String, String>? = null;
 
+    @NotEmpty
+    @Size(max = 10)
+    @Field(key = "churierpweb.administration.users.dto.field.userType")
+    @FormField(groupId = 6, indexInGroup = 0,
+        comboBoxConfiguration = ComboBoxConfiguration(mapFieldName = "userTypesMap"))
+    @ListField(selected = false)
+    var userType : String? = null
+
+    var userTypesMap : Map<String, String>? = null
+
+    @NotEmpty
+    @Size(max = 10)
+    @Field(key = "churierpweb.administration.users.dto.field.userSubtype")
+    @FormField(groupId = 6, indexInGroup = 1,
+        comboBoxConfiguration = ComboBoxConfiguration(mapFieldName = "userSubtypesMap", conditionFieldName = "userType"))
+    @ListField(selected = false)
+    var userSubtype : String? = null
+
+    var userSubtypesMap : Map<String, Map<String, String>>? = null
 }

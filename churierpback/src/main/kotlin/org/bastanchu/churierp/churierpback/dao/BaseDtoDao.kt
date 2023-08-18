@@ -4,11 +4,13 @@ interface BaseDtoDao <K,E, D> : BaseDao<K,E> {
 
     public fun toDataTransferObject(entity:E):D;
 
-    public fun toDataTransferObjectList(entityList:List<E>):List<D>;
+    public fun toDataTransferObjectList(entityList : List<E>) : List<D>;
 
     public fun toDataTransferObject(entity:E, dto:D);
 
     public fun fromDtoToEntity(dto:D):E;
 
     public fun fromDtoToEntity(dto:D, entity:E);
+
+    public fun fromDtoToEntityList(dtoList : List<D>?) : List<E>
 }

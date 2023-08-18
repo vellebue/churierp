@@ -84,6 +84,12 @@ public class BaseConfiguration {
         Properties properties = new Properties();
         properties.setProperty("hibernate.dialect", env.getProperty("hibernate.churierpweb.dialect"));
         properties.setProperty("hibernate.temp.use_jdbc_metadata_defaults","false");
+        // Show sql parameters
+        //properties.setProperty("hibernate.show_sql","true");
+        //properties.setProperty("hibernate.format_sql","true");
+        //properties.setProperty("log4j.logger.org.hibernate.SQL", "debug");
+        //properties.setProperty("log4j.logger.org.hibernate","info");
+        //properties.setProperty("log4j.logger.org.hibernate.type.descriptor.sql","trace");
         em.setJpaProperties(properties);
         return em;
     }
