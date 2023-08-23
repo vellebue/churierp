@@ -3,8 +3,14 @@ package org.bastanchu.churierp.churierpweb.view.administration.types;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.treegrid.TreeGrid;
+import com.vaadin.flow.data.provider.DataKeyMapper;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.renderer.Renderer;
+import com.vaadin.flow.data.renderer.Rendering;
+import com.vaadin.flow.dom.Element;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -129,8 +135,14 @@ public class TypesSubtypesView extends BodyView {
         TreeGrid<TreeGridItem> treeGrid = new TreeGrid<>();
         treeGrid.setMaxHeight((float) 12.5 , Unit.PICAS);
         treeGrid.setItems(model, TreeGridItem::getChildren);
-        treeGrid.addHierarchyColumn(TreeGridItem::getId).setHeader("ID");
-        treeGrid.addColumn(TreeGridItem::getDescription).setHeader("Description");
+        //treeGrid.addHierarchyColumn(TreeGridItem::getId).setHeader("ID");
+        treeGrid.addComponentHierarchyColumn(item -> {
+            return buildTreeGridLabel(item, item.getId());
+        }).setHeader("ID");
+        //treeGrid.addColumn(TreeGridItem::getDescription).setHeader("Description");
+        treeGrid.addComponentColumn(item -> {
+            return buildTreeGridLabel(item, item.getDescription());
+        }).setHeader("Description");
         treeGridsAreaMap.put(typedEntityDto.getId(), treeGrid);
         treGridsModelAreaMap.put(typedEntityDto.getId(), model);
         treeGrid.addItemClickListener(event -> {
@@ -148,7 +160,24 @@ public class TypesSubtypesView extends BodyView {
                subtypesPanel.setSubtypeModel(subtypeModel);
            }
         });
+        /*
+        treeGrid. addComponentColumn(item -> {
+            return new Label(item.getId());
+        });
+        treeGrid.addComponentHierarchyColumn(item -> {
+            return new Label(item.getId());
+        });
+
+         */
         return treeGrid;
+    }
+
+    private Label buildTreeGridLabel(TreeGridItem item, String text) {
+        Label label = new Label(text);
+        if ((item.getManageable() == null) || !item.getManageable()) {
+            label.getStyle().set("font-weight", "bold");
+        }
+        return label;
     }
 
     private List<TreeGridItem> buildTreeGridModel(TypedEntityDto typedEntityDto) {
@@ -157,12 +186,12 @@ public class TypesSubtypesView extends BodyView {
             List<TreeGridItem> subtypesList = new ArrayList<>();
             for (SubtypeDto subtypeDto : typeDto.getSubtypes()) {
                 TreeGridItem subtypeItem = new TreeGridItem(subtypeDto.getAreaId(), subtypeDto.getEntityId(),
-                        subtypeDto.getSubtypeId(), subtypeDto.getDescription(),
+                        subtypeDto.getSubtypeId(), subtypeDto.getDescription(), subtypeDto.getManageable(),
                         new ArrayList<>(), null);
                 subtypesList.add(subtypeItem);
             }
             TreeGridItem typeItem = new TreeGridItem(typeDto.getAreaId(), typeDto.getEntityId(),
-                    typeDto.getTypeId(), typeDto.getDescription(),
+                    typeDto.getTypeId(), typeDto.getDescription(), typeDto.getManageable(),
                     subtypesList, null);
             subtypesList.forEach(subtype -> {
                 subtype.setParent(typeItem);
@@ -181,6 +210,7 @@ public class TypesSubtypesView extends BodyView {
         private Integer entityId;
         private String id;
         private String description;
+        private Boolean manageable;
         private List<TreeGridItem> children;
         private TreeGridItem parent;
 
@@ -270,7 +300,7 @@ public class TypesSubtypesView extends BodyView {
                 TreeGrid<TreeGridItem> treeGridComponent = treeGridsMap.get(typeDto.getAreaId()).get(typeDto.getEntityId());
                 List<TreeGridItem> treeGridModel = treeGridsModelMap.get(typeDto.getAreaId()).get(typeDto.getEntityId());
                 TreeGridItem treeGridItem = new TreeGridItem(typeDto.getAreaId(), typeDto.getEntityId(), typeDto.getTypeId(),
-                        typeDto.getDescription(), new ArrayList<>(), null);
+                        typeDto.getDescription(), typeDto.getManageable(), new ArrayList<>(), null);
                 treeGridModel.add(treeGridItem);
                 treeGridComponent.setItems(treeGridModel, TreeGridItem::getChildren);
                 typesPanel.removeErrorMessages();
@@ -391,7 +421,7 @@ public class TypesSubtypesView extends BodyView {
                 TreeGridItem treeGridItem = treeGridModel.stream()
                         .filter(it -> it.getId().equals(bbddTypeDto.getTypeId())).findFirst().get();
                 TreeGridItem treeGridSubItem = new TreeGridItem(subtypeDto.getAreaId(), subtypeDto.getEntityId(), subtypeDto.getSubtypeId(),
-                        subtypeDto.getDescription(), new ArrayList<>(), treeGridItem);
+                        subtypeDto.getDescription(), subtypeDto.getManageable(), new ArrayList<>(), treeGridItem);
                 treeGridItem.getChildren().add(treeGridSubItem);
                 treeGridComponent.setItems(treeGridModel, TreeGridItem::getChildren);
                 treeGridComponent.expand(treeGridItem);
