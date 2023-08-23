@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>churierpweb</artifactId>
-    <!--version>1</version-->
+    <version>0.1</version>
     <packaging>war</packaging>
 
     <properties>
@@ -40,7 +40,7 @@
         <dependency>
             <groupId>org.bastanchu</groupId>
             <artifactId>churierpback</artifactId>
-            <version>${project.version}</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -388,6 +388,37 @@
                     <source>16</source>
                     <target>16</target>
                 </configuration>
+            </plugin>
+            <!-- build docker image -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>GenerateDockerImage</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>docker</executable>
+                            <arguments>
+                                <argument>image</argument>
+                                <argument>build</argument>
+                                <argument>-f</argument>
+                                <argument>${basedir}/docker/Dockerfile</argument>
+                                <argument>-t</argument>
+                                <argument>org.bastanchu/churierpweb:${version}</argument>
+                                <argument>--build-arg</argument>
+                                <argument>version=${version}</argument>
+                                <argument>--build-arg</argument>
+                                <argument>basedir=${basedir}</argument>
+                                <argument>.</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
