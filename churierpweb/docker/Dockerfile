@@ -8,10 +8,23 @@ FROM tomcat:9.0
 
 ARG version="1.0-SNAPSHOT"
 ARG basedir=""
+ARG jdbc_url=""
+ARG jdbc_username=""
+ARG jdbc_password=""
 LABEL "component"="churierpweb" "version"=$version
 
 USER root
 
 WORKDIR /usr/local/tomcat
 
+#ENV JDBC_URL=$jdbc_url
+#ENV JDBC_USERNAME=$jdbc_username
+#ENV JDBC_PASSWORD=$jdbc_password
+
 COPY /target/churierpweb-$version.war /usr/local/tomcat/webapps/churierpweb.war
+
+#COPY /docker/setenv.sh /usr/local/tomcat/bin/setenv.sh
+
+#RUN chmod 0700 /usr/local/tomcat/bin/setenv.sh
+
+#CMD ["start_tomcat.sh"]

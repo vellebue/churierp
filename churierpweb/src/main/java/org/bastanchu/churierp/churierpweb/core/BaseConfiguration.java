@@ -1,6 +1,8 @@
 package org.bastanchu.churierp.churierpweb.core;
 
 import org.hibernate.validator.HibernateValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -58,6 +60,8 @@ import java.util.Properties;
 @EnableTransactionManagement(mode = AdviceMode.PROXY)
 public class BaseConfiguration {
 
+    private Logger logger = LoggerFactory.getLogger(BaseConfiguration.class);
+
     @Autowired
     private Environment env;
     @Autowired
@@ -67,10 +71,21 @@ public class BaseConfiguration {
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getProperty("jdbc.churierpweb.driver"));
-        dataSource.setUrl(env.getProperty("jdbc.churierpweb.url"));
-        dataSource.setUsername(env.getProperty("jdbc.churierpweb.username"));
-        dataSource.setPassword(env.getProperty("jdbc.churierpweb.password"));
+        dataSource.setUrl(getDataSourceProperty("JDBC_URL", "jdbc.churierpweb.url"));
+        dataSource.setUsername(getDataSourceProperty("JDBC_USERNAME","jdbc.churierpweb.username"));
+        dataSource.setPassword(getDataSourceProperty("JDBC_PASSWORD","jdbc.churierpweb.password"));
         return dataSource;
+    }
+
+    private String getDataSourceProperty(String environmentProperty, String configProperty) {
+        String dataSourceValue = System.getenv(environmentProperty);
+        if ((dataSourceValue == null) || dataSourceValue.equals("")) {
+            dataSourceValue = env.getProperty(configProperty);
+            logger.info("Property " + configProperty + " value " + dataSourceValue);
+        } else {
+            logger.info("Environment " + environmentProperty + " value " +dataSourceValue);
+        }
+        return dataSourceValue;
     }
 
     @Bean(name="entityManagerFactory")
