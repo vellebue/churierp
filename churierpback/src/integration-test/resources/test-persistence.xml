@@ -1,12 +1,17 @@
-<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1" xsi:schemalocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1"
+             xsi:schemalocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
     <persistence-unit name="test-unit">
         <class>org.bastanchu.churierp.churierpback.entity.Address</class>
         <class>org.bastanchu.churierp.churierpback.entity.Language</class>
+        <class>org.bastanchu.churierp.churierpback.entity.accounting.taxes.VatType</class>
+        <class>org.bastanchu.churierp.churierpback.entity.accounting.taxes.VatValue</class>
         <class>org.bastanchu.churierp.churierpback.entity.administration.companies.Company</class>
         <class>org.bastanchu.churierp.churierpback.entity.administration.companies.Country</class>
         <class>org.bastanchu.churierp.churierpback.entity.administration.companies.Region</class>
+        <class>org.bastanchu.churierp.churierpback.entity.administration.types.Area</class>
+        <class>org.bastanchu.churierp.churierpback.entity.administration.types.Subtype</class>
+        <class>org.bastanchu.churierp.churierpback.entity.administration.types.TypedEntity</class>
+        <class>org.bastanchu.churierp.churierpback.entity.administration.types.Type</class>
         <class>org.bastanchu.churierp.churierpback.entity.administration.users.User</class>
-        <class>org.bastanchu.churierp.churierpback.entity.accounting.taxes.VatType</class>
-        <class>org.bastanchu.churierp.churierpback.entity.accounting.taxes.VatValue</class>
     </persistence-unit>
 </persistence>

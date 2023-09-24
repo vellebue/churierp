@@ -4,12 +4,7 @@ import com.github.dockerjava.api.model.ExposedPort
 import com.github.dockerjava.api.model.HostConfig
 import com.github.dockerjava.api.model.PortBinding
 import com.github.dockerjava.api.model.Ports
-import org.bastanchu.churierp.churierpback.dao.administration.companies.CountriesDao
-import org.bastanchu.churierp.churierpback.dao.administration.companies.RegionsDao
-import org.bastanchu.churierp.churierpback.service.FormatContextHolder
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.runner.RunWith
 import org.slf4j.LoggerFactory
@@ -22,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.context.junit4.SpringRunner
 import org.testcontainers.containers.PostgreSQLContainer
+import org.testcontainers.containers.output.Slf4jLogConsumer
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
@@ -46,7 +42,7 @@ import javax.sql.DataSource
  */
 abstract class BaseContainerDBITCase {
 
-    val logger = LoggerFactory.getLogger(BaseContainerDBITCase::class.java)
+    //val logger = LoggerFactory.getLogger(BaseContainerDBITCase::class.java)
 
     class MyPostgresqlContainer(dockerImageName : String) : PostgreSQLContainer<MyPostgresqlContainer>(dockerImageName)
 
@@ -88,6 +84,7 @@ abstract class BaseContainerDBITCase {
                                                                  ExposedPort(innerPort)
                 )))
             }
+            withLogConsumer(Slf4jLogConsumer(logger))
             waitingFor(Wait.defaultWaitStrategy())
                 .withCopyFileToContainer(
                     MountableFile.forHostPath(targetSQLFile),
@@ -105,7 +102,8 @@ abstract class BaseContainerDBITCase {
                 TestPropertyValues.of(
                     "spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
                     "spring.datasource.username=" + postgreSQLContainer.getUsername(),
-                    "spring.datasource.password=" + postgreSQLContainer.getPassword()
+                    "spring.datasource.password=" + postgreSQLContainer.getPassword(),
+                    "testcontainers.reuse.enable=true"
                 ).applyTo(applicationContext.getEnvironment());
             }
         }
@@ -150,22 +148,25 @@ abstract class BaseContainerDBITCase {
 
     @BeforeEach
     public fun loadPostgresqlContainer() {
-        println("Attemp to load script content")
-        logger.warn("Attemp to load script content")
+
+        //println("Attemp to load script content")
         synchronized(postgresqlContainerClassLoadedVector) {
             if (!postgresqlContainerClassLoadedVector.contains(this.javaClass)) {
-                println("Executing script content")
+                //val logConsumer = Slf4jLogConsumer(logger)
+                //postgreSQLContainer.followOutput(logConsumer)
+                logger.warn("Attemp to load script content")
+                logger.info("Executing script content")
                 if (!getScriptContent().trim().equals("")) {
                     logger.warn("Executing script content")
                     executePostgresqlScript(getScriptContent())
                     logger.warn("Script content executed")
                 } else {
-                    println("This is an empty script")
+                    logger.info("This is an empty script")
                 }
                 postgresqlContainerClassLoadedVector.add(this.javaClass)
-                println("Added class to vector")
+                logger.debug("Added class to vector")
             } else {
-                logger.warn("DB Script already loaded")
+                logger.info("DB Script already loaded")
             }
         }
     }
@@ -174,11 +175,11 @@ abstract class BaseContainerDBITCase {
         val conn = dataSource!!.connection
         conn.use {
             val callableStatement = it.prepareCall(script)
-            println("Executing script\n ${script}\n")
-            logger. warn("Executing test script content")
+            logger.info("Executing script\n ${script}\n")
             callableStatement.use {
                 it.execute()
             }
+            logger.info("Script executed")
         }
     }
 

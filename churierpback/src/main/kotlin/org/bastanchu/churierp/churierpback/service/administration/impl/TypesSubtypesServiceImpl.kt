@@ -36,9 +36,10 @@ class TypesSubtypesServiceImpl(@Autowired val areaDao : AreaDao,
         // Load areas
         areas.forEach {
             val areaDto = areaDao.toDataTransferObject(it)
-            val areaKey = areaDto.key
+            var areaKey : String? = areaDto.key
             var areaDescription = ""
             try {
+                if (areaKey == "") { areaKey = null}
                 areaDescription = messageSource.getMessage(areaKey, null,
                     LocaleContextHolder.getLocale())
                 areaDto.description = areaDescription
@@ -51,13 +52,14 @@ class TypesSubtypesServiceImpl(@Autowired val areaDao : AreaDao,
                 val typedEntity = it
                 areaDto.typedEntities?.forEach {
                     val typedEntityDto = it
-                    val typedEntityKey = typedEntityDto.key
+                    var typedEntityKey : String? = typedEntityDto.key
                     var typedEntityDescription = ""
                     try {
+                        if (typedEntityKey == "") { typedEntityKey = null }
                         typedEntityDescription = messageSource.getMessage(typedEntityKey, null, LocaleContextHolder.getLocale())
                         typedEntityDto.description = typedEntityDescription
                     } catch (e: NoSuchMessageException) {
-                        logger.debug("Typed entity key ${typedEntityKey} with no value, use default value ${typedEntity.description}")
+                        logger.debug("Typed entity key ${typedEntityKey} with no value, use default value ${typedEntityDto.description}")
                     }
                     if ((typedEntity.areaId == typedEntityDto.areaId) &&
                         (typedEntity.id == typedEntityDto.id)) {
@@ -180,11 +182,8 @@ class TypesSubtypesServiceImpl(@Autowired val areaDao : AreaDao,
         if (type.subtypes != null) {
             type.subtypes.forEach {
                 subtypesDao.delete(it)
-                //subtypesDao.flush()
             }
-            //type.subtypes = HashSet<Subtype>()
         }
         typesDao.delete(type)
-        //typesDao.flush()
     }
 }

@@ -2,7 +2,10 @@ package org.bastanchu.churierp.churierpback
 
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.MessageSource
 import org.springframework.context.annotation.*
+import org.springframework.context.i18n.LocaleContextHolder
+import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.core.env.Environment
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.jdbc.datasource.DriverManagerDataSource
@@ -15,6 +18,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 import java.beans.PropertyVetoException
 import java.util.*
 import javax.sql.DataSource
+
 
 /**
  * Mirar las siguientes URLs:
@@ -72,4 +76,16 @@ open class ApplicationContextConfiguration(@Autowired val environment: Environme
         return transactionManager
     }
 
+    @Bean(name = ["messageSource"])
+    @Throws(PropertyVetoException::class)
+    open fun messageSource() : MessageSource {
+        val messageSource = ReloadableResourceBundleMessageSource()
+        messageSource.setCacheSeconds(5)
+        messageSource.setDefaultEncoding("UTF-8")
+        messageSource.setFallbackToSystemLocale(true)
+        messageSource.setUseCodeAsDefaultMessage(true)
+        messageSource.setBasenames("file:../churierpweb/src/main/resources/languages/messages")
+        LocaleContextHolder.setLocale(Locale("en"))
+        return messageSource
+    }
 }
