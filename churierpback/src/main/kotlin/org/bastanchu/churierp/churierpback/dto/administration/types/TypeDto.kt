@@ -18,7 +18,7 @@ class TypeDto {
     @NotEmpty
     @Size(max = 10)
     @Field(key = "churierpweb.administration.types.typedto.typeId")
-    @FormField(groupId = 0, indexInGroup = 0, widthPercentage = 10.0)
+    @FormField(groupId = 0, indexInGroup = 0, widthPercentage = 10.0, maxWidthInPixels = 200.0)
     @ListField(keyField = true)
     var typeId : String? = null
 
@@ -28,7 +28,7 @@ class TypeDto {
     @NotEmpty
     @Size(max = 150)
     @Field(key = "churierpweb.administration.types.typedto.description")
-    @FormField(groupId = 0, indexInGroup = 1, widthPercentage = 50.0)
+    @FormField(groupId = 0, indexInGroup = 1, widthPercentage = 50.0, maxWidthInPixels = 600.0)
     var description : String? = null
 
     @HiddenFormField

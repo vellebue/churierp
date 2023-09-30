@@ -18,14 +18,14 @@ class SubtypeDto {
     @NotEmpty
     @Size(max = 10)
     @Field(key = "churierpweb.administration.types.typedto.typeId")
-    @FormField(groupId = 0, indexInGroup = 0, readOnly = true, widthPercentage = 10.0)
+    @FormField(groupId = 0, indexInGroup = 0, readOnly = true, widthPercentage = 10.0, maxWidthInPixels = 200.0)
     @ListField(keyField = true)
     var typeId : String? = null
 
     @NotEmpty
     @Size(max = 10)
     @Field(key = "churierpweb.administration.types.subtypedto.subtypeId")
-    @FormField(groupId = 0, indexInGroup = 1, widthPercentage = 10.0)
+    @FormField(groupId = 0, indexInGroup = 1, widthPercentage = 10.0, maxWidthInPixels = 200.0)
     @ListField(keyField = true)
     var subtypeId : String? = null
 
@@ -35,7 +35,7 @@ class SubtypeDto {
     @NotEmpty
     @Size(max = 150)
     @Field(key = "churierpweb.administration.types.subtypedto.description")
-    @FormField(groupId = 0, indexInGroup = 2, widthPercentage = 40.0)
+    @FormField(groupId = 0, indexInGroup = 2, widthPercentage = 40.0, maxWidthInPixels = 600.0)
     var description : String? = null
 
     @HiddenFormField

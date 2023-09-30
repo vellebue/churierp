@@ -65,6 +65,7 @@ public class CustomForm<T> extends FormLayout {
         private Integer colSpan;
         private ComboBoxConfiguration comboBoxConfiguration;
         private Double widthPercentage;
+        private Double maxWidthInPixels;
         private Field field;
         private boolean listKeyField;
 
@@ -142,7 +143,9 @@ public class CustomForm<T> extends FormLayout {
 
                     Class<?> fieldClass = field.getType();
                     fieldEntrySet.add(new CustomForm.FieldEntry(bean, formFieldAnnotation, labelText, fieldClass,
-                            colSpan, comboBoxConfiguration, formFieldAnnotation.widthPercentage(), field, keyListField));
+                            colSpan, comboBoxConfiguration,
+                            formFieldAnnotation.widthPercentage(), formFieldAnnotation.maxWidthInPixels(),
+                            field, keyListField));
                 }
             } else if (field.getAnnotation(org.bastanchu.churierp.churierpback.util.annotation.HiddenFormField.class) != null) {
                 // Fill initial null value for hidden field

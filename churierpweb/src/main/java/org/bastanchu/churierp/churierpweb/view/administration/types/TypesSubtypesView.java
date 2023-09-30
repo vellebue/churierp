@@ -6,14 +6,11 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.treegrid.TreeGrid;
-import com.vaadin.flow.data.provider.DataKeyMapper;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.data.renderer.Renderer;
-import com.vaadin.flow.data.renderer.Rendering;
-import com.vaadin.flow.dom.Element;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import org.bastanchu.churierp.churierpback.dto.administration.types.AreaDto;
 import org.bastanchu.churierp.churierpback.dto.administration.types.SubtypeDto;
 import org.bastanchu.churierp.churierpback.dto.administration.types.TypeDto;
@@ -22,8 +19,10 @@ import org.bastanchu.churierp.churierpback.service.administration.TypesSubtypesS
 import org.bastanchu.churierp.churierpweb.component.tab.TabbedContainer;
 import org.bastanchu.churierp.churierpweb.component.tab.TabbedListener;
 import org.bastanchu.churierp.churierpweb.component.view.BodyView;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.i18n.LocaleContextHolder;

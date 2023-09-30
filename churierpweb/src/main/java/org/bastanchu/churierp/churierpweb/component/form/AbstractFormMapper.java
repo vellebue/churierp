@@ -44,7 +44,7 @@ abstract class AbstractFormMapper<T> {
         this.forceReadOnly = forceReadOnly;
     }
 
-    protected Div buildComponentContainer(Component component) {
+    protected Div buildComponentContainer(Component component, CustomForm.FieldEntry fieldEntry) {
         Div divContainer = new Div();
         Div componentFiller = new Div();
         Div divFiller = new Div();
@@ -53,11 +53,15 @@ abstract class AbstractFormMapper<T> {
         componentFiller.add(component);
         divContainer.add(componentFiller);
         divContainer.add(divFiller);
+        logger.debug("Drawing generic field max width in pixels: " +  fieldEntry.getMaxWidthInPixels());
+        if (fieldEntry.getMaxWidthInPixels() != 0.0) {
+            divContainer.getStyle().set("max-width", fieldEntry.getMaxWidthInPixels() + "px");
+        }
         return divContainer;
     }
 
     @Deprecated
-    public abstract FormLayout.FormItem mapFormEntry(CustomForm form, CustomForm.FieldEntry fieldEntry);
+    //public abstract FormLayout.FormItem mapFormEntry(CustomForm form, CustomForm.FieldEntry fieldEntry);
 
     public abstract Component mapFieldEntry(CustomForm form, CustomForm.FieldEntry fieldEntry);
 

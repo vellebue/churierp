@@ -10,6 +10,8 @@ import com.vaadin.flow.data.binder.ValidationResult;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.Validator;
 import java.lang.reflect.Field;
@@ -31,48 +33,6 @@ public class ComboBoxFormMapper<T> extends AbstractFormMapper<T> {
 
     public ComboBoxFormMapper(Class<T> beanClass, BeanValidationBinder<T> binderValidator, Binder<T> binderReader, Validator validator, Map<String, Component> formComponentsMap, boolean forceReadOnly) {
         super(beanClass, binderValidator, binderReader, validator, formComponentsMap, forceReadOnly);
-    }
-
-    @Override
-    @Deprecated
-    public FormLayout.FormItem mapFormEntry(CustomForm form, CustomForm.FieldEntry fieldEntry) {
-        Field field = fieldEntry.getField();
-        ComboBox<String> formComponent = generateComboBox(fieldEntry);
-        if (fieldEntry.getFormField().readOnly()) {
-            formComponent.setReadOnly(true);
-        }
-        if (field.getAnnotation(NotEmpty.class) != null) {
-            formComponent.getStyle().set("border-left-style","solid");
-            formComponent.getStyle().set("border-left-width","thick");
-            formComponent.getStyle().set("border-left-color","#FF0000");
-        }
-        formComponent.getStyle().set("width","100%");
-        if (forceReadOnly || fieldEntry.getFormField().readOnly()) {
-            formComponent.setReadOnly(true);
-        }
-        FormLayout.FormItem formComponentContainer = form.addFormItem(formComponent, fieldEntry.getFieldLabel());
-        binderReader.forField(formComponent)
-                .bind(e -> {
-                    String item = (String) binderGetter(field, e);
-                    return item;
-                }, (e , v) -> {
-                    binderSetter(field, e, v);
-                });
-        binderValidator.forField(formComponent).withValidator((e, valueContext) -> {
-            String validation = binderValidator(field);
-            if (validation.equals("")) {
-                return ValidationResult.ok();
-            } else {
-                return ValidationResult.error(validation);
-            }
-        }).bind(e -> {
-            String item = (String) binderGetter(field, e);
-            return item;
-        }, (e , v) -> {
-            binderSetter(field, e, v);
-        });
-        formComponentsMap.put(fieldEntry.getField().getName(), formComponent);
-        return formComponentContainer;
     }
 
     private ComboBox<String> generateComboBox(CustomForm.FieldEntry fieldEntry) {
@@ -180,7 +140,7 @@ public class ComboBoxFormMapper<T> extends AbstractFormMapper<T> {
         if (forceReadOnly || fieldEntry.getFormField().readOnly()) {
             formComponent.setReadOnly(true);
         }
-        form.add(buildComponentContainer(formComponent), fieldEntry.getColSpan());
+        form.add(buildComponentContainer(formComponent, fieldEntry), fieldEntry.getColSpan());
         binderReader.forField(formComponent)
                 .bind(e -> {
                     String item = (String) binderGetter(field, e);
