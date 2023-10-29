@@ -19,6 +19,9 @@ values(0, 0, 'org.bastanchu.churierp.churierpback.entity.administration.users.Us
 insert into C_TYPED_ENTITIES(AREA_ID, ID, JAVA_CLASS, KEY, DESCRIPTION, ALLOW_SUBTYPES)
 values(0, 1, 'org.bastanchu.churierp.churierpback.entity.administration.companies.Company',
        'churierpweb.administration.typedentities.company', 'Company', true);
+insert into C_TYPED_ENTITIES(AREA_ID, ID, JAVA_CLASS, KEY, DESCRIPTION, ALLOW_SUBTYPES)
+values(1, 2, 'org.bastanchu.churierp.churierpback.entity.accounting.accounts.Account',
+       'churierpweb.accounting.typedentities.accounting', 'Account', true);
 
 insert into TYPED_TYPES(AREA_ID, ENTITY_ID, TYPE_ID, KEY, DESCRIPTION, MANAGEABLE)
 values(0, 0, 'REG_USER', 'churierpweb.administration.types.user.reg_user', 'Regular User', false);
@@ -49,5 +52,14 @@ INSERT INTO users (user_id, creation_user, creation_time, update_user, update_ti
 --Addresses model
 INSERT INTO c_address_types (type_id,description,"key") VALUES
 	 ('COMP', 'Company Address', 'churierpweb.address.type.comp');
+
+--Accounting accounts
+INSERT INTO C_ACCOUNTING_PLANS(PLAN_ID, COUNTRY_ID, KEY, DESCRIPTION)
+VALUES ('NPGC', 'ES', 'churierpweb.accounting.accounts.plan.npgc', 'Nuevo Plan General Contable Spain');
+
+INSERT INTO C_ACCOUNTING_ACCOUNT_KINDS(ID, KEY, DESCRIPTION)
+VALUES ('X', 'churierpweb.accounting.accounts.accountkind.X', 'Balance Account'),
+       ('P', 'churierpweb.accounting.accounts.accountkind.P', 'P&L Account'),
+       ('A', 'churierpweb.accounting.accounts.accountkind.A', 'Analytical Account');
 
 commit;

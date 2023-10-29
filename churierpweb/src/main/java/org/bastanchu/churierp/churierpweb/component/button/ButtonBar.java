@@ -31,11 +31,11 @@ public class ButtonBar extends HorizontalLayout {
 
     @Override
     public void add(Component... components) {
-        throw new UnsupportedOperationException("Not allowed to add components");
+        throw new UnsupportedOperationException("Not allowed to add components. Use addButton to add buttons instead.");
     }
 
     @Override
     public void add(String text) {
-        throw new UnsupportedOperationException("Not allowed to add texts");
+        throw new UnsupportedOperationException("Not allowed to add texts. Use addButton to add buttons instead.");
     }
 }

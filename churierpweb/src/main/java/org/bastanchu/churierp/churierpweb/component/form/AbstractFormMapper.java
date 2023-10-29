@@ -56,6 +56,9 @@ abstract class AbstractFormMapper<T> {
         logger.debug("Drawing generic field max width in pixels: " +  fieldEntry.getMaxWidthInPixels());
         if (fieldEntry.getMaxWidthInPixels() != 0.0) {
             divContainer.getStyle().set("max-width", fieldEntry.getMaxWidthInPixels() + "px");
+            divContainer.getStyle().set("min-width", fieldEntry.getMaxWidthInPixels() + "px");
+            divContainer.getStyle().set("width", fieldEntry.getMaxWidthInPixels() + "px");
+            divContainer.getStyle().set("margin-left", "0px");
         }
         return divContainer;
     }

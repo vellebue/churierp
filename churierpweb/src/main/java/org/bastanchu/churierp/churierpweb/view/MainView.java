@@ -16,6 +16,8 @@ import org.bastanchu.churierp.churierpback.service.administration.UserService;
 import org.bastanchu.churierp.churierpweb.component.view.BodyView;
 import org.bastanchu.churierp.churierpweb.delegate.MenuDelegate;
 import org.bastanchu.churierp.churierpweb.dto.MenuDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
@@ -31,6 +33,7 @@ import java.util.stream.Stream;
 @CssImport(value = "./css/ThematicIcon.css")
 public class MainView extends VerticalLayout {
 
+    private Logger logger = LoggerFactory.getLogger(MainView.class);
     private MenuDelegate menuDelegate;
     private MessageSource messageSource;
     private ApplicationContext applicationContext;
@@ -106,8 +109,15 @@ public class MainView extends VerticalLayout {
         try {
             if (item.isDefinedComponent()) {
                 ClassLoader loader = Thread.currentThread().getContextClassLoader();
-                final BodyView component = item.buildBodyViewComponent(applicationContext);
+                final MenuDto currentItem = item;
                 menuItem.addClickListener(e -> {
+                    BodyView component = null;
+                    try {
+                        component = item.buildBodyViewComponent(applicationContext);
+                    } catch(Exception e1) {
+                        logger.error("Error initializing menu component " + menuItem.getText(), e1);
+                        throw new RuntimeException(e1);
+                    }
                     // Remove previous body view if present
                     Stream<? extends Component> children = bodyDiv.getChildren();
                     children.forEach(element -> {

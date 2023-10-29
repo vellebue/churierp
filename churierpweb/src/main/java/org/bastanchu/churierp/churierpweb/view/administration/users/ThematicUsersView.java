@@ -25,15 +25,5 @@ public class ThematicUsersView extends FullThematicBodyView<UserDto, UserFilterD
 
     public ThematicUsersView(ApplicationContext appContext) {
         super(appContext);
-        /*
-        setBodyTitle(getMessageSource().getMessage("churierpweb.administration.users.mainView.title",
-                null, LocaleContextHolder.getLocale()));
-        ThematicUsersFilterView usersFilterView = new ThematicUsersFilterView(getApplicationContext());
-        setFilterView(usersFilterView);
-        ThematicUsersListView usersListView = new ThematicUsersListView(getApplicationContext());
-        setListView(usersListView);
-        ThematicBodySingleItemView usersSingleItemView = new ThematicUsersSingleItemView(getApplicationContext());
-        setSingleItemView(usersSingleItemView);
-        */
     }
 }

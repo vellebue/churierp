@@ -85,10 +85,34 @@ create table VAT_TYPES(COUNTRY_ID varchar(2) NOT NULL REFERENCES C_COUNTRIES(COU
                        DESCRIPTION varchar(256) NOT NULL,
                        primary key (COUNTRY_ID, VAT_ID));
 
-create table VAT_VALUES(COUNTRY_ID varchar(2) NOT NULL ,
+create table VAT_VALUES(COUNTRY_ID varchar(2) NOT NULL REFERENCES C_COUNTRIES(COUNTRY_ID),
                         VAT_ID varchar(2) NOT NULL,
                         VALID_FROM date NOT NULL, VALID_TO date NULL,
                         CREATION_USER VARCHAR(100) NOT NULL, CREATION_TIME TIMESTAMP NOT NULL, UPDATE_USER VARCHAR(100) NOT NULL, UPDATE_TIME TIMESTAMP NOT NULL,
                         PERCENTAGE DECIMAL(5,2) NOT NULL, UPCHARGE DECIMAL(5,2) NOT NULL,
                         primary key(COUNTRY_ID, VAT_ID, VALID_FROM),
                         constraint fk_vat_values_vat_regions foreign key (COUNTRY_ID, VAT_ID) references VAT_TYPES(COUNTRY_ID, VAT_ID));
+--Accounting accounts
+create table C_ACCOUNTING_PLANS(PLAN_ID varchar(10) PRIMARY KEY,
+                                COUNTRY_ID varchar(2) NOT NULL REFERENCES C_COUNTRIES(COUNTRY_ID),
+                                KEY varchar(150) NOT NULL,
+                                DESCRIPTION varchar(512) NOT NULL);
+create table C_ACCOUNTING_ACCOUNT_KINDS(ID varchar(2) PRIMARY KEY,
+                                      KEY varchar(150) NOT NULL,
+                                      DESCRIPTION varchar(512) NOT NULL);
+create table ACCOUNTING_ACCOUNTS(ACC_ID int PRIMARY KEY,
+                                 PLAN_ID varchar(10) NOT NULL REFERENCES C_ACCOUNTING_PLANS(PLAN_ID),
+                                 COMPANY_ID int NOT NULL REFERENCES COMPANIES(COMPANY_ID),
+                                 CREATION_USER VARCHAR(100) NOT NULL, CREATION_TIME TIMESTAMP NOT NULL, UPDATE_USER VARCHAR(100) NOT NULL, UPDATE_TIME TIMESTAMP NOT NULL,
+                                 KIND_ID varchar(2) NOT NULL REFERENCES C_ACCOUNTING_ACCOUNT_KINDS(ID),
+                                 DEB_HAB varchar(1) NOT NULL,
+                                 ACCOUNT VARCHAR(10) NOT NULL, DESCRIPTION varchar(512) NOT NULL,
+                                 TYPE_ID varchar(10) NULL, SUBTYPE_ID varchar(10) NULL,
+                                 QUALIFIED BOOLEAN NOT NULL);
+create sequence SEQ_AC_ACCOUNTS
+    increment by 1
+    minvalue 0
+    maxvalue 999999999
+    start with 0
+    cycle
+    owned by ACCOUNTING_ACCOUNTS.ACC_ID;

@@ -219,6 +219,12 @@ public class CustomForm<T> extends FormLayout {
                     new BigDecimalFormMapper<>(beanClass, binderValidator, binderReader,
                             validator, formComponentsMap, forceReadOnly);
             component = bigDecimalFormMapper.mapFieldEntry(this, fieldEntry);
+        } else if (Boolean.class.isAssignableFrom(fieldType)) {
+            // Boolean checkbox field
+            BooleanCheckBoxFormMapper<T> booleanCheckBoxFormMapper =
+                    new BooleanCheckBoxFormMapper<>(beanClass, binderValidator, binderReader,
+                            validator, formComponentsMap, forceReadOnly);
+            component = booleanCheckBoxFormMapper.mapFieldEntry(this, fieldEntry);
         } else {
             // Generic Text Field
             StringFormMapper<T> stringFormMapper =

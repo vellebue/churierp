@@ -45,3 +45,5 @@ list:
         children:
           - menuText: "churierpweb.menu.accounting.taxes.Vat"
             factoryClassName: "org.bastanchu.churierp.churierpweb.view.accounting.taxes.vat.VatMasterView$Factory"
+      - menuText: "churierpweb.menu.accounting.Accounts"
+        factoryClassName: "org.bastanchu.churierp.churierpweb.view.accounting.accounts.ThematicAccountsView$Factory"

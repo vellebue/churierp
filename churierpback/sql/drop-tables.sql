@@ -1,3 +1,9 @@
+--Accounting accounts
+drop sequence SEQ_AC_ACCOUNTS;
+drop table ACCOUNTING_ACCOUNTS;
+drop table C_ACCOUNTING_ACCOUNT_KINDS;
+drop table C_ACCOUNTING_PLANS;
+
 --VAT Data Master model
 drop table VAT_VALUES;
 drop table VAT_TYPES;

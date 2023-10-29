@@ -149,7 +149,20 @@ public class PagedTableComponent<T> extends VerticalLayout
                         BigDecimal numberValue = (BigDecimal) value;
                         String formattedValue = numberFormat.format(numberValue);
                         return formattedValue;
-                    }  else {
+                    } if (value instanceof java.lang.Boolean) {
+                        Boolean booleanValue = (Boolean) value;
+                        if (booleanValue != null) {
+                            if (booleanValue) {
+                                return messageSource.getMessage("churierpweb.booleanValue.true",
+                                        null, LocaleContextHolder.getLocale());
+                            } else {
+                                return messageSource.getMessage("churierpweb.booleanValue.false",
+                                        null, LocaleContextHolder.getLocale());
+                            }
+                        } else {
+                            return "";
+                        }
+                    } else {
                         return value;
                     }
                 } catch (IllegalAccessException ex) {

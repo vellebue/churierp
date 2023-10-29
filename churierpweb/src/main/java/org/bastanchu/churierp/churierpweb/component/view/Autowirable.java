@@ -1,5 +1,7 @@
 package org.bastanchu.churierp.churierpweb.component.view;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
@@ -10,6 +12,8 @@ import java.util.List;
 
 public interface Autowirable {
 
+    Logger logger = LoggerFactory.getLogger(Autowirable.class);
+
     default void autowireComponents(ApplicationContext applicationContext) {
         try {
             Field[] fields = getFields(this.getClass());
@@ -17,6 +21,7 @@ public interface Autowirable {
                 Annotation annotation = aField.getAnnotation(Autowired.class);
                 if (annotation != null) {
                     aField.setAccessible(true);
+                    logger.debug("Autowring type " +  aField.getType() + " for class " + this.getClass().getCanonicalName());
                     aField.set(this, applicationContext.getBean(aField.getType()));
                 }
             }

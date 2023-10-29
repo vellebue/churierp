@@ -47,6 +47,7 @@ class StringFormMapper<T> extends AbstractFormMapper<T> {
             }
         }
         formComponent.getStyle().set("width","100%");
+        formComponent.getStyle().set("margin-left", "0px");
         form.add( buildComponentContainer(formComponent, fieldEntry), fieldEntry.getColSpan());
         binderReader.forField(formComponent)
                 .bind(e -> {
