@@ -18,7 +18,6 @@ class VatServiceUpdatesITCase(@Autowired val vatService :VatService) : BaseConta
 
     override fun getScriptContent(): String {
         return """
-            INSERT INTO c_countries (country_id, name, key) VALUES ('ES', 'Spain', 'churierpweb.country.ES');
             --VAT types
             INSERT INTO vat_types (country_id,vat_id,creation_user,creation_time,update_user,update_time,description) VALUES
             	 ('ES','NR','angel','2022-11-13 23:10:07.746','angel','2022-11-13 23:10:07.746','Normal Updateable');
