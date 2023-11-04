@@ -3,6 +3,9 @@
     <persistence-unit name="test-unit">
         <class>org.bastanchu.churierp.churierpback.entity.Address</class>
         <class>org.bastanchu.churierp.churierpback.entity.Language</class>
+        <class>org.bastanchu.churierp.churierpback.entity.accounting.accounts.Account</class>
+        <class>org.bastanchu.churierp.churierpback.entity.accounting.accounts.AccountingKinds</class>
+        <class>org.bastanchu.churierp.churierpback.entity.accounting.accounts.AccountingPlan</class>
         <class>org.bastanchu.churierp.churierpback.entity.accounting.taxes.VatType</class>
         <class>org.bastanchu.churierp.churierpback.entity.accounting.taxes.VatValue</class>
         <class>org.bastanchu.churierp.churierpback.entity.administration.companies.Company</class>

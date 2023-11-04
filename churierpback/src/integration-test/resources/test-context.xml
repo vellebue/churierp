@@ -3,13 +3,19 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="AccountDao" class="org.bastanchu.churierp.churierpback.dao.impl.accounting.accounts.AccountDaoImpl"/>
+    <bean id="AccountingKindsDao" class="org.bastanchu.churierp.churierpback.dao.impl.accounting.accounts.AccountingKindsDaoImpl"/>
+    <bean id="AccountingPlanDao" class="org.bastanchu.churierp.churierpback.dao.impl.accounting.accounts.AccountingPlanDaoImpl"/>
     <bean id="AreaDao" class="org.bastanchu.churierp.churierpback.dao.impl.administration.types.AreaDaoImpl"/>
+    <bean id="CompaniesDao" class="org.bastanchu.churierp.churierpback.dao.impl.administration.companies.CompaniesDaoImpl"/>
     <bean id="CountriesDao" class="org.bastanchu.churierp.churierpback.dao.impl.administration.companies.CountriesDaoImpl"/>
     <bean id="LanguagesDao" class="org.bastanchu.churierp.churierpback.dao.impl.LanguagesDaoImpl"/>
     <bean id="RegionsDao" class="org.bastanchu.churierp.churierpback.dao.impl.administration.companies.RegionsDaoImpl"/>
     <bean id="SubtypesDao" class="org.bastanchu.churierp.churierpback.dao.impl.administration.types.SubtypesDaoImpl"/>
     <bean id="TypesDao" class="org.bastanchu.churierp.churierpback.dao.impl.administration.types.TypedEntityDaoImpl"/>
     <bean id="TypedEntityDao" class="org.bastanchu.churierp.churierpback.dao.impl.administration.types.TypesDaoImpl"/>
+    <bean id="AccountingService" class="org.bastanchu.churierp.churierpback.service.accounting.accounts.impl.AccountServiceImpl"/>
+    <bean id="CompanyService" class="org.bastanchu.churierp.churierpback.service.administration.impl.CompanyServiceImpl"/>
     <bean id="TypesSubtypesService" class="org.bastanchu.churierp.churierpback.service.administration.impl.TypesSubtypesServiceImpl"/>
     <bean id="UserDao" class="org.bastanchu.churierp.churierpback.dao.impl.administration.users.UserDaoImpl"/>
     <bean id="VatTypeDao" class="org.bastanchu.churierp.churierpback.dao.impl.accounting.taxes.VatTypesDaoImpl"/>
