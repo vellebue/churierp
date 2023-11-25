@@ -1,10 +1,12 @@
 package org.bastanchu.churierp.churierpweb.core;
 
+import org.flywaydb.core.Flyway;
 import org.hibernate.validator.HibernateValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
@@ -77,6 +79,16 @@ public class BaseConfiguration {
         return dataSource;
     }
 
+    @Bean
+    public Flyway flywayInitializer(@Autowired DataSource dataSource) {
+        org.flywaydb.core.api.configuration.ClassicConfiguration flywayConfiguration = new
+                org.flywaydb.core.api.configuration.ClassicConfiguration();
+        flywayConfiguration.setDataSource(dataSource);
+        flywayConfiguration.setLocationsAsStrings("db/migrations");
+        Flyway flyway = new Flyway(flywayConfiguration);
+        return flyway;
+    }
+
     private String getDataSourceProperty(String environmentProperty, String configProperty) {
         String dataSourceValue = System.getenv(environmentProperty);
         if ((dataSourceValue == null) || dataSourceValue.equals("")) {
@@ -90,7 +102,10 @@ public class BaseConfiguration {
 
     @Bean(name="entityManagerFactory")
     @Primary
-    public LocalContainerEntityManagerFactoryBean  entityManagerFactoryBean(@Autowired DataSource dataSource) throws PropertyVetoException {
+    public LocalContainerEntityManagerFactoryBean  entityManagerFactoryBean(@Autowired DataSource dataSource, @Autowired Flyway flyway) throws PropertyVetoException {
+        logger.info("Initializing flyway");
+        flyway.migrate();
+        logger.info("Initializing JPA Entity Manager");
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
         em.setPackagesToScan(new String[]{"org.bastanchu.churierp.churierpback.entity"});

@@ -1,5 +1,7 @@
 package org.bastanchu.churierp.churierpback
 
+import org.flywaydb.core.Flyway
+import org.flywaydb.core.api.configuration.ClassicConfiguration
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
@@ -49,10 +51,18 @@ open class ApplicationContextConfiguration(@Autowired val environment: Environme
         return dataSource
     }
 
+    @Bean(name = ["flyway"])
+    open fun flywayInitializer(@Autowired dataSource: DataSource): Flyway {
+        val flywayConfiguration = ClassicConfiguration()
+        flywayConfiguration.dataSource = dataSource
+        flywayConfiguration.setLocationsAsStrings("filesystem:/src/main/resources/db/migrations")
+        return Flyway(flywayConfiguration)
+    }
+
     @Bean(name = ["entityManagerFactory"])
     @Primary
     @Throws(PropertyVetoException::class)
-    open fun entityManagerFactoryBean(@Autowired dataSource: DataSource): LocalContainerEntityManagerFactoryBean? {
+    open fun entityManagerFactoryBean(@Autowired dataSource: DataSource, @Autowired flyway:Flyway): LocalContainerEntityManagerFactoryBean? {
         val em = LocalContainerEntityManagerFactoryBean()
         em.dataSource = dataSource
         //em.setPackagesToScan(*packagesToScanForEntities)
@@ -88,4 +98,6 @@ open class ApplicationContextConfiguration(@Autowired val environment: Environme
         LocaleContextHolder.setLocale(Locale("en"))
         return messageSource
     }
+
+
 }

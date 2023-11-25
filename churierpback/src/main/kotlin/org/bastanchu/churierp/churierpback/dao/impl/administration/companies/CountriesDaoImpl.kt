@@ -42,10 +42,11 @@ class CountriesDaoImpl(@PersistenceContext(unitName = "entityManagerFactory") ov
     }
 
     override fun initializeCountriesRegions() {
-        initializeCountries()
-        initializeRegions()
+        //initializeCountries()
+        //initializeRegions()
     }
 
+    @Deprecated("No longer required, database countries are initielized using database script.")
     private fun initializeCountries() {
         val previousCountriesDb = listAll()
         val loader = Thread.currentThread().contextClassLoader
@@ -67,6 +68,7 @@ class CountriesDaoImpl(@PersistenceContext(unitName = "entityManagerFactory") ov
         }
     }
 
+    @Deprecated("No longer required, database regions are initielized using database script.")
     private fun initializeRegions() {
         val previousRegions = regionsDao?.listAll()
         val loader = Thread.currentThread().contextClassLoader

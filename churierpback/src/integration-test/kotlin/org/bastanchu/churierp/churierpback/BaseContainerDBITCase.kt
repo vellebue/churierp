@@ -4,6 +4,8 @@ import com.github.dockerjava.api.model.ExposedPort
 import com.github.dockerjava.api.model.HostConfig
 import com.github.dockerjava.api.model.PortBinding
 import com.github.dockerjava.api.model.Ports
+import org.flywaydb.core.Flyway
+import org.flywaydb.core.api.configuration.ClassicConfiguration
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.runner.RunWith
@@ -49,12 +51,6 @@ abstract class BaseContainerDBITCase {
     //@Lazy
     @Autowired
     protected var dataSource : DataSource? = null
-    /*
-    @Autowired
-    private var countriesDao : CountriesDao? = null
-    @Autowired
-    private var regionsDao : RegionsDao? = null
-     */
 
     companion object {
 
@@ -68,12 +64,6 @@ abstract class BaseContainerDBITCase {
         val postgreSQLContainer = MyPostgresqlContainer("postgres:11.1").apply {
             val innerPort = 5432
             val outerPort = getExposedPort()
-            val targetSQLFileBaseName = "target/sql/target-file"
-            val testDelcaringClass = this::class.java.declaringClass as Class<in BaseContainerDBITCase>
-            val targetSQLFile = concatenateFiles(
-                arrayOf(File("sql/create-tables.sql"), File("sql/insert-data.sql")),
-                targetSQLFileBaseName, testDelcaringClass
-            )
             withDatabaseName("integration-tests-db")
             withUsername("sa")
             withPassword("sa")
@@ -85,11 +75,6 @@ abstract class BaseContainerDBITCase {
                 )))
             }
             withLogConsumer(Slf4jLogConsumer(logger))
-            waitingFor(Wait.defaultWaitStrategy())
-                .withCopyFileToContainer(
-                    MountableFile.forHostPath(targetSQLFile),
-                    "/docker-entrypoint-initdb.d/init.sql"
-                )
         }
 
         @Synchronized private fun getExposedPort() : Int {
@@ -107,43 +92,6 @@ abstract class BaseContainerDBITCase {
                 ).applyTo(applicationContext.getEnvironment());
             }
         }
-
-        private fun concatenateFiles(
-            inFiles: Array<File>,
-            outFilePrefixName: String,
-            testClass: Class<in BaseContainerDBITCase>
-        ): String {
-            val timestamp = Date().time
-            val outFile = outFilePrefixName + "_" + testClass.simpleName + "_" + timestamp + ".sql"
-            logger.info("Database initialization script for class ${testClass.simpleName} is ${outFile} ")
-            createSqlDirIfNotExists()
-            val outputWriter = FileWriter(outFile)
-            outputWriter.use {
-                val outWriter = it
-                for (inputFile in inFiles) {
-                    val inputBuffer = BufferedReader(FileReader(inputFile))
-                    inputBuffer.use {
-                        val inBuffer = it
-                        var line: String? = inBuffer.readLine()
-                        while (line != null) {
-                            outWriter.write(line)
-                            outWriter.write("\n")
-                            line = inBuffer.readLine()
-                        }
-                    }
-                }
-                outWriter.flush()
-            }
-            return outFile
-        }
-
-        private fun createSqlDirIfNotExists() {
-            val fileDir = File("target/sql")
-            if (!(fileDir.exists() && fileDir.isDirectory)) {
-                fileDir.mkdir()
-            }
-        }
-
     }
 
     @BeforeEach
@@ -152,6 +100,10 @@ abstract class BaseContainerDBITCase {
         //println("Attemp to load script content")
         synchronized(postgresqlContainerClassLoadedVector) {
             if (!postgresqlContainerClassLoadedVector.contains(this.javaClass)) {
+                logger.info("Performing DB load")
+                val flyway = buildFlyway()
+                flyway?.migrate()
+                logger.info("DB load completed")
                 //val logConsumer = Slf4jLogConsumer(logger)
                 //postgreSQLContainer.followOutput(logConsumer)
                 logger.warn("Attemp to load script content")
@@ -169,6 +121,14 @@ abstract class BaseContainerDBITCase {
                 logger.info("DB Script already loaded")
             }
         }
+    }
+
+    private fun buildFlyway() : Flyway {
+        val flywayConfiguration = ClassicConfiguration()
+        flywayConfiguration.dataSource = dataSource
+        flywayConfiguration.setLocationsAsStrings("db/migrations")
+        val flyway = Flyway(flywayConfiguration)
+        return flyway
     }
 
     private fun executePostgresqlScript(script : String) {
