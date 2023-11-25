@@ -21,7 +21,7 @@
         <vaadin.version>22.0.4</vaadin.version>
         <spring.version>5.3.8</spring.version>
         <snakeyaml.version>1.29</snakeyaml.version>
-        <lombok.version>1.18.26</lombok.version>
+        <lombok.version>1.18.30</lombok.version>
     </properties>
 
     <dependencyManagement>
